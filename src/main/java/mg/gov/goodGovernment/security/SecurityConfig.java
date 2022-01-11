@@ -1,10 +1,9 @@
 package mg.gov.goodGovernment.security;
 
 import lombok.RequiredArgsConstructor;
-import mg.gov.goodGovernment.government.Government;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -13,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import static mg.gov.goodGovernment.security.AppUserPermission.*;
 
 /**
  * Configuration du securité de l'application
@@ -21,6 +19,7 @@ import static mg.gov.goodGovernment.security.AppUserPermission.*;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -29,13 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-
-                // CRUD region
-                .antMatchers(HttpMethod.POST, "/api/v1/regions/**").hasAuthority(REGION_CREATE.getPermission())
-                .antMatchers(HttpMethod.PUT, "/api/v1/regions/**").hasAuthority(REGION_UPDATE.getPermission())
-                .antMatchers(HttpMethod.DELETE, "/api/v1/regions/**").hasAuthority(REGION_DELETE.getPermission())
-                .antMatchers("/api/v1/regions/**").hasAuthority(REGION_READ.getPermission())
-
                 .anyRequest()
                 .authenticated()
                 .and()

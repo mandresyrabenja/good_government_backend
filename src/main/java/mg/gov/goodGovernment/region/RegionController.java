@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import mg.gov.goodGovernment.http.HttpResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -16,12 +17,14 @@ public class RegionController {
     private final RegionService regionService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('region:read')")
     public List<Region> getRegions() {
         return regionService.getRegions();
     }
 
     @GetMapping(path = "{regionId}")
-    public ResponseEntity<Object> find(@PathVariable("regionId") Integer id) {
+    @PreAuthorize("hasAuthority('region:read')")
+    public ResponseEntity<Object> findRegion(@PathVariable("regionId") Integer id) {
         Region region = regionService.findById(id);
         if(region != null) {
             return new ResponseEntity<>(region, HttpStatus.FOUND);
@@ -34,6 +37,7 @@ public class RegionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('region:create')")
     public ResponseEntity<HttpResponse> addRegion(@RequestBody Region region) {
         try{
             regionService.addRegion(region);
@@ -51,6 +55,7 @@ public class RegionController {
     }
 
     @DeleteMapping(path = "{regionId}")
+    @PreAuthorize("hasAuthority('region:delete')")
     public ResponseEntity<HttpResponse> deleteRegion(@PathVariable("regionId") Integer id) {
         try {
             regionService.deleteRegion(id);
@@ -68,6 +73,7 @@ public class RegionController {
     }
 
     @PutMapping(path = "{regionId}")
+    @PreAuthorize("hasAuthority('region:update')")
     public ResponseEntity<HttpResponse> updateRegion(@PathVariable("regionId") Integer id,
                                    @RequestParam(required = false) String name,
                                    @RequestParam(required = false) String password)
