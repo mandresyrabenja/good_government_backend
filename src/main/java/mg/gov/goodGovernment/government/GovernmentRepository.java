@@ -1,0 +1,9 @@
+package mg.gov.goodGovernment.government;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface GovernmentRepository extends JpaRepository<Government, String> {
+    public Boolean existsByLogin(String login);
+}
