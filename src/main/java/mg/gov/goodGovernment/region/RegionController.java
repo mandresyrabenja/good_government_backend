@@ -19,13 +19,13 @@ public class RegionController {
     @GetMapping
     @PreAuthorize("hasAuthority('region:read')")
     public List<Region> getRegions() {
-        return regionService.getRegions();
+        return regionService.findAllRegions();
     }
 
     @GetMapping(path = "{regionId}")
     @PreAuthorize("hasAuthority('region:read')")
     public ResponseEntity<Object> findRegion(@PathVariable("regionId") Integer id) {
-        Region region = regionService.findById(id);
+        Region region = regionService.findByIdRegion(id);
         if(region != null) {
             return new ResponseEntity<>(region, HttpStatus.FOUND);
         } else {
@@ -40,7 +40,7 @@ public class RegionController {
     @PreAuthorize("hasAuthority('region:create')")
     public ResponseEntity<HttpResponse> addRegion(@RequestBody Region region) {
         try{
-            regionService.addRegion(region);
+            regionService.createRegion(region);
         } catch (IllegalStateException e) {
             // Si une région à déjà le même nom
             return new ResponseEntity<>(

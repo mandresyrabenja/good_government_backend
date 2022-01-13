@@ -1,7 +1,7 @@
 package mg.gov.goodGovernment;
 
 import mg.gov.goodGovernment.region.Region;
-import mg.gov.goodGovernment.region.RegionService;
+import mg.gov.goodGovernment.region.RegionServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,11 +18,12 @@ public class GoodGovernmentApplication {
 	}
 
 	/**
-	 * Ajout des 22 regions dans la base de données
+	 * Bean pour ajouter les 22 regions dans la base de données
 	 * @param service RegionService
+	 * @return CommandLineRunner
 	 */
 	@Bean
-	public CommandLineRunner runner(RegionService service) {
+	public CommandLineRunner runner(RegionServiceImpl service) {
 		return args -> {
 			// 22 Regions
 			ArrayList<Region> regions = new ArrayList<>();
@@ -52,7 +53,7 @@ public class GoodGovernmentApplication {
 
 			// Ajout des regions aux base de données
 			for (Region region: regions) {
-				service.addRegion(region);
+				service.createRegion(region);
 			}
 		};
 	}

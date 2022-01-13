@@ -15,4 +15,6 @@ public class Controller {
         return "login";
     }
 
+    @GetMapping("logout")
+    public String getLogout() {  return "logout"; }
 }
