@@ -1,7 +1,11 @@
 package mg.gov.goodGovernment.security;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import mg.gov.goodGovernment.security.auth.ApplicationUserService;
+import mg.gov.goodGovernment.security.jwt.JwtConfig;
+import mg.gov.goodGovernment.security.jwt.JwtTokenVerifier;
+import mg.gov.goodGovernment.security.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -10,53 +14,37 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import java.util.concurrent.TimeUnit;
+import javax.crypto.SecretKey;
 
 /**
  * Configuration du securité de l'application
  */
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+@AllArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder passwordEncoder;
     private final ApplicationUserService applicationUserService;
+    private final SecretKey secretKey;
+    private final JwtConfig jwtConfig;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .csrf().disable() // Cet application va être utilisé par des clients web et mobile
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+            .and()
+
+            .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey))
+            .addFilterAfter(new JwtTokenVerifier(secretKey, jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class)
             .authorizeRequests()
             .anyRequest()
-            .authenticated()
-
-            .and()
-
-            .formLogin()
-                .loginPage("/login").permitAll()
-                .defaultSuccessUrl("/logout")
-                .usernameParameter("username")
-                .passwordParameter("password")
-
-            .and()
-
-            .rememberMe()
-                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(24))
-                .rememberMeParameter("remember-me")
-
-            .and()
-
-            .logout()
-                .logoutUrl("/logout")
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
-                .clearAuthentication(true)
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID", "remember-me")
-                .logoutSuccessUrl("/login");
+            .authenticated();
     }
 
     @Override
