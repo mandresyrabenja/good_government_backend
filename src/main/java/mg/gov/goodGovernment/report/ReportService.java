@@ -4,6 +4,7 @@ import mg.gov.goodGovernment.region.Region;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Interface du service d'accèss aux base de donnée de la classe Report
@@ -16,6 +17,13 @@ public interface ReportService {
      * @param report Le signalement
      */
     void insert(Report report);
+
+    /**
+     * find Report by ID
+     * @param id ID  du Report
+     * @return Report
+     */
+    Report findById(Long id);
 
     /**
      * Avoir la liste des signalèment fait dans une région

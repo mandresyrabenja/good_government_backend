@@ -23,6 +23,28 @@ public class ReportController {
     private final RegionService regionService;
 
     /**
+     * GetById report
+     * @param id ID
+     * @return Report
+     */
+    @GetMapping(path = "{id}")
+    @PreAuthorize("hasAuthority('report:read')")
+    public ResponseEntity<Object> findReport(@PathVariable Long id) {
+        try {
+            Report report = reportService.findById(id);
+            return new ResponseEntity<>(report, HttpStatus.FOUND);
+        } catch (IllegalStateException e) {
+            // Si aucun signalement ne correspond à l'ID envoyé par le requête Http
+          return new ResponseEntity<>(
+                  new HttpResponse(
+                          HttpStatus.NOT_FOUND.value(), true, e.getMessage()
+                  ),
+                  HttpStatus.NOT_FOUND
+          );
+        }
+    }
+
+    /**
      * Avoir la liste des signalements pas encore affecté à une région
      * @return La liste des signalements pas encore affecté à une région
      */

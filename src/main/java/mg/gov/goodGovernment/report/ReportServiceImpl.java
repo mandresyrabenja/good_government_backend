@@ -5,6 +5,7 @@ import mg.gov.goodGovernment.region.Region;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Une implémentation de l'interface du couche service de la classe Report
@@ -17,6 +18,13 @@ public class ReportServiceImpl implements ReportService{
     @Override
     public void insert(Report report) {
         reportRepository.save(report);
+    }
+
+    @Override
+    public Report findById(Long id) {
+        return reportRepository.findById(id).orElseThrow(
+                () -> new IllegalStateException("Aucun signalement correspondant")
+        );
     }
 
     @Override
