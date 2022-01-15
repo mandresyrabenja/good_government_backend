@@ -1,6 +1,7 @@
 package mg.gov.goodGovernment.report;
 
 import lombok.RequiredArgsConstructor;
+import mg.gov.goodGovernment.citizen.Citizen;
 import mg.gov.goodGovernment.region.Region;
 import mg.gov.goodGovernment.region.RegionService;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,11 @@ import java.util.List;
 public class ReportServiceImpl implements ReportService{
     private final ReportRepository reportRepository;
     private final RegionService regionService;
+
+    @Override
+    public List<Report> findByCitizen(Citizen citizen) {
+        return reportRepository.findByCitizen(citizen);
+    }
 
     @Override
     public void insert(Report report) { reportRepository.save(report); }

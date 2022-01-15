@@ -24,6 +24,13 @@ public class ReportController {
     private final CitizenService citizenService;
     private final RegionService regionService;
 
+    /**
+     * Mettre à jour un signalement<br>
+     * @param id ID du signalement
+     * @param regionId ID de la nouvelle région du signalement
+     * @param status Nouvelle status de la signalement
+     * @return Une JSON décrivant si l'opération est effectué ou a un erreur
+     */
     @PutMapping(path = "{id}")
     @PreAuthorize("hasAuthority('report:update')")
     public ResponseEntity<HttpResponse> updateReport(@PathVariable Long id,
@@ -79,13 +86,14 @@ public class ReportController {
     }
 
     /**
-     * Avoir la liste des signalements de problèmes d'une région
+     * Avoir la liste des signalements de problèmes d'une région, d'un citoyen
+     * ou ceux qui ne sont pas encore attribué à une région particulière
      * @param regionId ID du région
      * @return La liste des signalements de problèmes du région
      */
     @GetMapping
     @PreAuthorize("hasAuthority('report:read')")
-    public List<Report> findReportByRegion(Authentication authentication,
+    public List<Report> findReport(Authentication authentication,
             @RequestParam(value = "region", required = false) String regionId)
     {
         // Récuperer la liste des signalements pas encore affecté
@@ -101,6 +109,15 @@ public class ReportController {
             Region region =  regionService.findByName(regionName);
             return reportService.findByRegion(region);
         };
+
+        // Si l'utilisateur connecté est de type citoyen
+        // Alors on récupere la liste des signalements effectués par lui
+        if( authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CITIZEN")) ) {
+            String citizenEmail = (String) authentication.getPrincipal();
+            Citizen citizen =  citizenService.findByEmail(citizenEmail);
+            return reportService.findByCitizen(citizen);
+        };
+
         return null;
     }
 
@@ -123,7 +140,7 @@ public class ReportController {
         // Affectation des données nécessaire au signalement
         report.setDate(LocalDate.now());
         report.setCitizen(citizen);
-        report.setStatus(Status.NEW.name());
+        report.setStatus(Status.NEW.getStatus());
 
         // Insertion à la base de données
         reportService.insert(report);

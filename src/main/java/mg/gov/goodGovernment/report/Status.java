@@ -1,7 +1,9 @@
 package mg.gov.goodGovernment.report;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum Status {
     NEW("new"),
@@ -12,7 +14,7 @@ public enum Status {
 
     public static Boolean isValidStatus(String test) {
         for (Status status : Status.values()) {
-            if (status.name().equals(test)) {
+            if (status.status.equalsIgnoreCase(test)) {
                 return true;
             }
         }

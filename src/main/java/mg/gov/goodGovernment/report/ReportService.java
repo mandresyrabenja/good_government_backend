@@ -1,5 +1,6 @@
 package mg.gov.goodGovernment.report;
 
+import mg.gov.goodGovernment.citizen.Citizen;
 import mg.gov.goodGovernment.region.Region;
 import org.springframework.stereotype.Service;
 
@@ -10,8 +11,14 @@ import java.util.Optional;
  * Interface du service d'accèss aux base de donnée de la classe Report
  * @author Mandresy
  */
-@Service
 public interface ReportService {
+    /**
+     * Avoir la liste des signalements faits par un citoyen
+     * @param citizen Le citoyen filtre
+     * @return La liste des signalements faits par le citoyen
+     */
+    List<Report> findByCitizen(Citizen citizen);
+
     /**
      * Inserer un signalement de problème aux base de données
      * @param report Report à inserer

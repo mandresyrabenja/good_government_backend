@@ -6,7 +6,6 @@ import mg.gov.goodGovernment.government.Government;
 import mg.gov.goodGovernment.government.GovernmentService;
 import mg.gov.goodGovernment.region.Region;
 import mg.gov.goodGovernment.region.RegionService;
-import mg.gov.goodGovernment.report.ReportService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
