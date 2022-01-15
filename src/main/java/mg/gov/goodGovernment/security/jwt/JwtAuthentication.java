@@ -2,8 +2,8 @@ package mg.gov.goodGovernment.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import mg.gov.goodGovernment.authentication.UsernameAndPasswordRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import java.util.Date;
 
 @RequiredArgsConstructor
-public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class JwtAuthentication extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtConfig jwtConfig;
     private final SecretKey secretKey;
@@ -28,13 +28,18 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
+            // Récuperation des données d'authentification
             UsernameAndPasswordRequest usernameAndPasswordRequest = new ObjectMapper().readValue(
                     request.getInputStream(), UsernameAndPasswordRequest.class
             );
+
+            // Hashage du mot de passe en sha256
+            usernameAndPasswordRequest.hashPassword();
+
+            // Création d'une nouvelle authentification
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     usernameAndPasswordRequest.getUsername(), usernameAndPasswordRequest.getPassword()
             );
-
             return authenticationManager.authenticate(authentication);
         } catch (IOException e) {
             throw new RuntimeException(e);

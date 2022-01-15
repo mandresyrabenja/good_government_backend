@@ -1,7 +1,11 @@
 package mg.gov.goodGovernment;
 
+import mg.gov.goodGovernment.citizen.Citizen;
+import mg.gov.goodGovernment.citizen.CitizenService;
+import mg.gov.goodGovernment.government.Government;
+import mg.gov.goodGovernment.government.GovernmentService;
 import mg.gov.goodGovernment.region.Region;
-import mg.gov.goodGovernment.region.RegionServiceImpl;
+import mg.gov.goodGovernment.region.RegionService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,6 +13,8 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 
 @SpringBootApplication
@@ -20,14 +26,15 @@ public class GoodGovernmentApplication {
 	}
 
 	/**
-	 * Bean pour ajouter les 22 regions dans la base de données
-	 * @param service RegionService
-	 * @return CommandLineRunner
+	 * Insertion des données de test dans la base de données
+	 * @param regionService Service d'accès aux base de données d'un compte région
+	 * @param governmentService Service d'accès aux base de données d'un compte gouvernement
+	 * @param citizenService Service d'accès aux base de données d'un compte citoyen
 	 */
 	@Bean
-	public CommandLineRunner runner(RegionServiceImpl service) {
+	public CommandLineRunner runner(RegionService regionService, GovernmentService governmentService, CitizenService citizenService) {
 		return args -> {
-			// 22 Regions
+			// Les 22 regions de Madagascar
 			ArrayList<Region> regions = new ArrayList<>();
 			regions.add(new Region("Diana", "1234") );
 			regions.add(new Region("Sava", "1234") );
@@ -55,8 +62,23 @@ public class GoodGovernmentApplication {
 
 			// Ajout des regions aux base de données
 			for (Region region: regions) {
-				service.createRegion(region);
+				regionService.createRegion(region);
 			}
+
+			// Ajout d'un compte gouvernement
+			governmentService.createGovernment(new Government("admin", "admin"));
+
+			// Ajout d'un citoyen
+			citizenService.createCitizen(
+				new Citizen(
+					111_111_001_969L,
+					"Finiavana Mandresy",
+					"RABENJAHARISON",
+					LocalDate.of(2001, Month.MARCH, 8),
+					"mandresyrabenj@gmail.com",
+					"0000"
+				)
+			);
 		};
 	}
 

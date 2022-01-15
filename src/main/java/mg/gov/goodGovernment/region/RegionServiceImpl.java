@@ -1,40 +1,65 @@
 package mg.gov.goodGovernment.region;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import mg.gov.goodGovernment.security.AppUserRole;
+import mg.gov.goodGovernment.authentication.ApplicationUser;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class RegionServiceImpl implements RegionService {
-    private final RegionRepository repository;
+@Slf4j
+public class RegionServiceImpl implements RegionService, UserDetailsService {
+    private final RegionRepository regionRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+        Region region = regionRepository.findByNameIgnoreCase(name).orElseThrow(
+                () -> new UsernameNotFoundException(String.format("No region has %s as name", name))
+        );
+        return new ApplicationUser(
+                region.getName(),
+                passwordEncoder.encode( region.getPassword() ),
+                AppUserRole.REGION.getGrantedAutorities(),
+                true,
+                true,
+                true,
+                true
+        );
+    }
 
     public void createRegion(Region region) {
-        Optional<Region> region1 = repository.findByName(region.getName());
-        if (region1.isPresent()) {
-            throw new IllegalStateException("Une région porte dejà le même nom");
+        // Le nom d'une région est unique
+        if(regionRepository.existsByName(region.getName())) {
+            throw new IllegalStateException("A region has already the same name as " + region.getName());
         }
-        repository.save(region);
+
+        regionRepository.save(region);
     }
 
     public List<Region> findAllRegions() {
-        return repository.findAll();
+        return regionRepository.findAll();
     }
 
     public void deleteRegion(Integer id) {
-        Region region = repository.findById(id).orElseThrow(
+        Region region = regionRepository.findById(id).orElseThrow(
                 () -> new IllegalStateException("Aucune region n'a cette ID")
         );
-        repository.delete(region);
+        regionRepository.delete(region);
     }
 
     @Transactional
     public void updateRegion(Integer id, String name, String password) {
-        Region region = repository.findById(id).orElseThrow(
+        Region region = regionRepository.findById(id).orElseThrow(
                 () -> new IllegalStateException("Aucune region n'a cette ID")
         );
         if( (name != null) && (name.length() > 0) && !Objects.equals(name, region.getName()) ) {
@@ -46,8 +71,8 @@ public class RegionServiceImpl implements RegionService {
     }
 
     public Region findByIdRegion(Integer id) {
-        if(repository.existsById(id)) {
-            return repository.findById(id).get();
+        if(regionRepository.existsById(id)) {
+            return regionRepository.findById(id).get();
         } else {
             return null;
         }

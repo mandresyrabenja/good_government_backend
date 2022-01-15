@@ -1,4 +1,4 @@
-package mg.gov.goodGovernment.security.auth;
+package mg.gov.goodGovernment.authentication;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,6 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Set;
 
+/**
+ * UserDetails personnalisé pour cet application
+ */
 @AllArgsConstructor
 public class ApplicationUser implements UserDetails {
     private final String username;

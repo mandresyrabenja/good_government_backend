@@ -1,8 +1,10 @@
 package mg.gov.goodGovernment.region;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.hash.Hashing;
 import lombok.*;
 import mg.gov.goodGovernment.report.Report;
+import mg.gov.goodGovernment.security.Sha256;
 
 import javax.persistence.*;
 import java.nio.charset.StandardCharsets;
@@ -25,6 +27,7 @@ public class Region {
     )
     private Integer id;
     private String name;
+    @JsonIgnore
     @Setter(AccessLevel.NONE)
     private String password;
     @OneToMany(mappedBy = "region")
@@ -32,7 +35,7 @@ public class Region {
 
     public Region(String name, String password) {
         this.name = name;
-        this.password = password;
+        setPassword(password);
     }
 
     /**
@@ -40,8 +43,6 @@ public class Region {
      * @param password Mot de passe
      */
     public void setPassword(String password) {
-        this.password = Hashing.sha256().hashString(
-                password, StandardCharsets.UTF_8
-        ).toString();
+        this.password = Sha256.hash(password);
     }
 }
