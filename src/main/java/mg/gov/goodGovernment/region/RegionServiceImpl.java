@@ -2,8 +2,8 @@ package mg.gov.goodGovernment.region;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mg.gov.goodGovernment.security.AppUserRole;
 import mg.gov.goodGovernment.authentication.ApplicationUser;
+import mg.gov.goodGovernment.security.AppUserRole;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,9 +23,7 @@ public class RegionServiceImpl implements RegionService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-        Region region = regionRepository.findByNameIgnoreCase(name).orElseThrow(
-                () -> new UsernameNotFoundException(String.format("No region has %s as name", name))
-        );
+        Region region = findByName(name);
         return new ApplicationUser(
                 region.getName(),
                 passwordEncoder.encode( region.getPassword() ),
@@ -76,5 +74,12 @@ public class RegionServiceImpl implements RegionService, UserDetailsService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public Region findByName(String name) {
+        return regionRepository.findByNameIgnoreCase(name).orElseThrow(
+                () -> new UsernameNotFoundException(String.format("No region has %s as name", name))
+        );
     }
 }

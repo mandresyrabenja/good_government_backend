@@ -14,9 +14,17 @@ import java.util.Optional;
 public interface ReportService {
     /**
      * Inserer un signalement de problème aux base de données
-     * @param report Le signalement
+     * @param report Report à inserer
      */
     void insert(Report report);
+
+    /**
+     * Mettre à jour un signalement de problème aux base de données
+     * @param id ID du report
+     * @param regionId ID de la nouvelle région du report
+     * @param status Status du report
+     */
+    void update(Long id, Integer regionId, String status);
 
     /**
      * find Report by ID

@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import mg.gov.goodGovernment.citizen.Citizen;
 import mg.gov.goodGovernment.citizen.CitizenService;
 import mg.gov.goodGovernment.http.HttpResponse;
+import mg.gov.goodGovernment.region.Region;
 import mg.gov.goodGovernment.region.RegionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -21,6 +23,29 @@ public class ReportController {
     private final ReportService reportService;
     private final CitizenService citizenService;
     private final RegionService regionService;
+
+    @PutMapping(path = "{id}")
+    @PreAuthorize("hasAuthority('report:update')")
+    public ResponseEntity<HttpResponse> updateReport(@PathVariable Long id,
+                                                     @RequestParam(required = false) Integer regionId,
+                                                     @RequestParam(required = false) String status) {
+        try{
+            reportService.update(id, regionId, status);
+            return new ResponseEntity<>(
+                    new HttpResponse(
+                            HttpStatus.OK.value(), false, "Signalement mis à jour avec succès"
+                    ),
+                    HttpStatus.OK
+            );
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(
+                    new HttpResponse(
+                            HttpStatus.NOT_ACCEPTABLE.value(), true, e.getMessage()
+                    ),
+                    HttpStatus.NOT_ACCEPTABLE
+            );
+        }
+    }
 
     /**
      * GetById report
@@ -60,16 +85,23 @@ public class ReportController {
      */
     @GetMapping
     @PreAuthorize("hasAuthority('report:read')")
-    public List<Report> findReportByRegion(@RequestParam("region") String regionId) {
+    public List<Report> findReportByRegion(Authentication authentication,
+            @RequestParam(value = "region", required = false) String regionId)
+    {
         // Récuperer la liste des signalements pas encore affecté
         // si regionId est null
         if ("null".equalsIgnoreCase(regionId)) {
             return findNotAssignedReport();
         }
 
-        // Si regionId n'est pas null alors
-        // Récuperer la liste des signalements de problèmes de la région correspondant
-        return reportService.findByRegion( regionService.findByIdRegion(Integer.parseInt(regionId)) );
+        // Si l'utilisateur connecté est de type région
+        // Alors on récupere la liste des signalements affectés à elle
+        if( authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REGION")) ) {
+            String regionName = (String) authentication.getPrincipal();
+            Region region =  regionService.findByName(regionName);
+            return reportService.findByRegion(region);
+        };
+        return null;
     }
 
     @PostMapping
