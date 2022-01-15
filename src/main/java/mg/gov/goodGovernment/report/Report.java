@@ -31,8 +31,8 @@ public class Report {
     private LocalDate date;
     private String title;
     private String description;
-    private Long latitude;
-    private Long longitude;
+    private Double latitude;
+    private Double longitude;
     @ManyToOne
     private Region region;
     private String status;

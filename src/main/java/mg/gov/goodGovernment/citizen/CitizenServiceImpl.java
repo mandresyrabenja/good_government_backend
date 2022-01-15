@@ -41,6 +41,11 @@ public class CitizenServiceImpl implements CitizenService, UserDetailsService {
 
     @Override
     public void createCitizen(Citizen citizen) {
+        // Un email est unique
+        if(citizenRepository.existsByEmail(citizen.getEmail())) {
+            throw new IllegalStateException("Un autre citoyen a déjà la même email");
+        }
+
         // Vérification de l'attribut CIN si le citoyen a 18ans ou plus
         if(citizen.isAdultCitizen() && (null == citizen.getCin()) ) {
             throw new IllegalStateException("Un citoyen qui a 18ans ou plus doit avoir un CIN");
@@ -113,5 +118,12 @@ public class CitizenServiceImpl implements CitizenService, UserDetailsService {
     public void deleteCitizen(Long id) {
         Citizen dbCitizen = findCitizen(id);
         citizenRepository.delete(dbCitizen);
+    }
+
+    @Override
+    public Citizen findByEmail(String email) {
+        return citizenRepository.findByEmail(email).orElseThrow(
+                () -> new UsernameNotFoundException(String.format("Aucun citoyen n'a %s comme email", email))
+        );
     }
 }

@@ -3,6 +3,8 @@ package mg.gov.goodGovernment.citizen;
 import lombok.RequiredArgsConstructor;
 import mg.gov.goodGovernment.http.HttpResponse;
 import mg.gov.goodGovernment.report.Report;
+import mg.gov.goodGovernment.report.ReportService;
+import mg.gov.goodGovernment.report.Status;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,12 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CitizenController {
     private final CitizenService citizenService;
-
-    @PostMapping(path = "{id}/report")
-    @PreAuthorize("hasAuthority('report:create')")
-    public ResponseEntity<Report> createReport(@RequestBody Report report) {
-        return new ResponseEntity<>(report, HttpStatus.OK);
-    }
+    private final ReportService reportService;
 
     @GetMapping
     @PreAuthorize("hasAuthority('citizen:read')")

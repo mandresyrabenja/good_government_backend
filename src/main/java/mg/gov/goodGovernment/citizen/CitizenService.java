@@ -8,4 +8,5 @@ public interface CitizenService {
     List<Citizen> findAllCitizens();
     Citizen findCitizen(Long id);
     void deleteCitizen(Long id);
+    Citizen findByEmail(String email);
 }

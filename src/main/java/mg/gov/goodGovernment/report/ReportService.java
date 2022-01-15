@@ -1,10 +1,12 @@
 package mg.gov.goodGovernment.report;
 
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Interface du service d'accèss aux base de donnée de la classe Report
+ * @author Mandresy
+ */
 @Service
-@AllArgsConstructor
-public class ReportService {
-    private final ReportRepository repository;
+public interface ReportService {
+    void insert(Report report);
 }
