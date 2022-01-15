@@ -1,6 +1,7 @@
 package mg.gov.goodGovernment.citizen;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import mg.gov.goodGovernment.report.Report;
@@ -51,6 +52,7 @@ public class Citizen {
     private String password;
 
     @OneToMany(mappedBy = "citizen")
+    @JsonManagedReference("citizen_report")
     private Collection<Report> reports;
 
     /**

@@ -1,5 +1,6 @@
 package mg.gov.goodGovernment.region;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import mg.gov.goodGovernment.report.Report;
@@ -24,11 +25,16 @@ public class Region {
             generator = "sequence_region"
     )
     private Integer id;
+
+    @Column(nullable = false)
     private String name;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Setter(AccessLevel.NONE)
     private String password;
+
     @OneToMany(mappedBy = "region")
+    @JsonManagedReference("region_report")
     private Collection<Report> reports;
 
     public Region(String name, String password) {
