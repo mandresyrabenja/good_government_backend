@@ -1,6 +1,7 @@
 package mg.gov.goodGovernment.government;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import mg.gov.goodGovernment.security.Sha256;
 
@@ -24,7 +25,7 @@ public class Government {
     @Column(unique = true)
     private String login;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Setter(AccessLevel.NONE)
     private String password;
 

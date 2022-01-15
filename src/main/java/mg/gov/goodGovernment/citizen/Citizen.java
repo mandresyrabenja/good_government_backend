@@ -1,7 +1,6 @@
 package mg.gov.goodGovernment.citizen;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import mg.gov.goodGovernment.report.Report;
@@ -47,8 +46,8 @@ public class Citizen {
     private String email;
 
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Setter(AccessLevel.NONE)
-    @JsonIgnore
     private String password;
 
     @OneToMany(mappedBy = "citizen")

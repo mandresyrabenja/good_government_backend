@@ -1,13 +1,11 @@
 package mg.gov.goodGovernment.region;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.hash.Hashing;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import mg.gov.goodGovernment.report.Report;
 import mg.gov.goodGovernment.security.Sha256;
 
 import javax.persistence.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 @Data
@@ -27,7 +25,7 @@ public class Region {
     )
     private Integer id;
     private String name;
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Setter(AccessLevel.NONE)
     private String password;
     @OneToMany(mappedBy = "region")

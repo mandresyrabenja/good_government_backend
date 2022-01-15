@@ -29,10 +29,9 @@ public class GoodGovernmentApplication {
 	 * Insertion des données de test dans la base de données
 	 * @param regionService Service d'accès aux base de données d'un compte région
 	 * @param governmentService Service d'accès aux base de données d'un compte gouvernement
-	 * @param citizenService Service d'accès aux base de données d'un compte citoyen
 	 */
 	@Bean
-	public CommandLineRunner runner(RegionService regionService, GovernmentService governmentService, CitizenService citizenService) {
+	public CommandLineRunner runner(RegionService regionService, GovernmentService governmentService) {
 		return args -> {
 			// Les 22 regions de Madagascar
 			ArrayList<Region> regions = new ArrayList<>();
@@ -67,18 +66,6 @@ public class GoodGovernmentApplication {
 
 			// Ajout d'un compte gouvernement
 			governmentService.createGovernment(new Government("admin", "admin"));
-
-			// Ajout d'un citoyen
-			citizenService.createCitizen(
-				new Citizen(
-					111_111_001_969L,
-					"Finiavana Mandresy",
-					"RABENJAHARISON",
-					LocalDate.of(2001, Month.MARCH, 8),
-					"mandresyrabenj@gmail.com",
-					"0000"
-				)
-			);
 		};
 	}
 
