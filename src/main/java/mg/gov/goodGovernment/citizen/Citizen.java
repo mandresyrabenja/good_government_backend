@@ -51,6 +51,7 @@ public class Citizen {
     @Setter(AccessLevel.NONE)
     private String password;
 
+    @org.springframework.data.annotation.Transient
     @OneToMany(mappedBy = "citizen")
     @JsonManagedReference("citizen_report")
     private Collection<Report> reports;

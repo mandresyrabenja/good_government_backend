@@ -33,6 +33,7 @@ public class Region {
     @Setter(AccessLevel.NONE)
     private String password;
 
+    @org.springframework.data.annotation.Transient
     @OneToMany(mappedBy = "region")
     @JsonManagedReference("region_report")
     private Collection<Report> reports;

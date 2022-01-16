@@ -2,6 +2,8 @@ package mg.gov.goodGovernment.citizen;
 
 import lombok.RequiredArgsConstructor;
 import mg.gov.goodGovernment.http.HttpResponse;
+import mg.gov.goodGovernment.notification.CitizenNotification;
+import mg.gov.goodGovernment.notification.CitizenNotificationService;
 import mg.gov.goodGovernment.report.Report;
 import mg.gov.goodGovernment.report.ReportService;
 import mg.gov.goodGovernment.report.Status;
@@ -20,6 +22,7 @@ import java.util.List;
 public class CitizenController {
     private final CitizenService citizenService;
     private final ReportService reportService;
+    private final CitizenNotificationService citizenNotificationService;
 
     @GetMapping
     @PreAuthorize("hasAuthority('citizen:read')")
@@ -45,6 +48,9 @@ public class CitizenController {
     public ResponseEntity<HttpResponse> createCitizen(@RequestBody Citizen citizen) {
         try{
             citizenService.createCitizen(citizen);
+            citizenNotificationService.addNotification(
+                    new CitizenNotification(citizen)
+            );
         } catch (IllegalStateException e) {
             return new ResponseEntity<>(
                     // Aux cas ou une règle a été violée

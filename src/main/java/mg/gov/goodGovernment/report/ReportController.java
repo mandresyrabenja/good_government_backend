@@ -33,11 +33,12 @@ public class ReportController {
      */
     @PutMapping(path = "{id}")
     @PreAuthorize("hasAuthority('report:update')")
-    public ResponseEntity<HttpResponse> updateReport(@PathVariable Long id,
+    public ResponseEntity<HttpResponse> updateReport(Authentication authentication,
+                                                     @PathVariable Long id,
                                                      @RequestParam(required = false) Integer regionId,
                                                      @RequestParam(required = false) String status) {
         try{
-            reportService.update(id, regionId, status);
+            reportService.update(authentication, id, regionId, status);
             return new ResponseEntity<>(
                     new HttpResponse(
                             HttpStatus.OK.value(), false, "Signalement mis à jour avec succès"

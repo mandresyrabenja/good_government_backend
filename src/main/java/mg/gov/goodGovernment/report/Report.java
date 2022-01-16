@@ -26,6 +26,7 @@ public class Report {
     )
     private Long id;
 
+    @org.springframework.data.annotation.Transient
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "citizen_id")
     @JsonBackReference("citizen_report")
@@ -46,7 +47,8 @@ public class Report {
     @Column(nullable = false)
     private Double longitude;
 
-    @ManyToOne(optional = true)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "region_id")
     @JsonBackReference("region_report")
     private Region region;
 

@@ -2,6 +2,7 @@ package mg.gov.goodGovernment.report;
 
 import mg.gov.goodGovernment.citizen.Citizen;
 import mg.gov.goodGovernment.region.Region;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,11 +28,12 @@ public interface ReportService {
 
     /**
      * Mettre à jour un signalement de problème aux base de données
+     * @param authentication Authentication de l'utilisateur connecté
      * @param id ID du report
      * @param regionId ID de la nouvelle région du report
      * @param status Status du report
      */
-    void update(Long id, Integer regionId, String status);
+    void update(Authentication authentication, Long id, Integer regionId, String status);
 
     /**
      * find Report by ID
