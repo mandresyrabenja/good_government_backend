@@ -1,11 +1,12 @@
 package mg.gov.goodGovernment.region;
 
-import com.google.common.hash.Hashing;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import mg.gov.goodGovernment.report.Report;
+import mg.gov.goodGovernment.security.Sha256;
 
 import javax.persistence.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 @Data
@@ -24,15 +25,22 @@ public class Region {
             generator = "sequence_region"
     )
     private Integer id;
+
+    @Column(nullable = false)
     private String name;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Setter(AccessLevel.NONE)
     private String password;
+
+    @org.springframework.data.annotation.Transient
     @OneToMany(mappedBy = "region")
+    @JsonManagedReference("region_report")
     private Collection<Report> reports;
 
     public Region(String name, String password) {
         this.name = name;
-        this.password = password;
+        setPassword(password);
     }
 
     /**
@@ -40,8 +48,6 @@ public class Region {
      * @param password Mot de passe
      */
     public void setPassword(String password) {
-        this.password = Hashing.sha256().hashString(
-                password, StandardCharsets.UTF_8
-        ).toString();
+        this.password = Sha256.hash(password);
     }
 }

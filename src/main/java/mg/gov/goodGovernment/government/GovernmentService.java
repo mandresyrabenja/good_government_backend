@@ -1,8 +1,8 @@
 package mg.gov.goodGovernment.government;
 
-import mg.gov.goodGovernment.http.HttpResponse;
-import org.springframework.http.ResponseEntity;
+import java.util.List;
 
 public interface GovernmentService {
-    public void addGovernment(Government government);
+    void createGovernment(Government government);
+    List<Government> findAll();
 }
