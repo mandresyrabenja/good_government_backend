@@ -47,6 +47,7 @@ public class Report {
     @Column(nullable = false)
     private Double longitude;
 
+    @org.springframework.data.annotation.Transient
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id")
     @JsonBackReference("region_report")

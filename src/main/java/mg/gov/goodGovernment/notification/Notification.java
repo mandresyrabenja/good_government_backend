@@ -14,5 +14,6 @@ import mg.gov.goodGovernment.report.Report;
 @NoArgsConstructor
 public class Notification {
     private Report solvedProblem;
+    private String regionName;
     private Boolean isReadByCitizen;
 }

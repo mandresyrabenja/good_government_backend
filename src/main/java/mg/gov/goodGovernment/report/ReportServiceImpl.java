@@ -3,8 +3,8 @@ package mg.gov.goodGovernment.report;
 import lombok.RequiredArgsConstructor;
 import mg.gov.goodGovernment.citizen.Citizen;
 import mg.gov.goodGovernment.notification.CitizenNotification;
-import mg.gov.goodGovernment.notification.Notification;
 import mg.gov.goodGovernment.notification.CitizenNotificationService;
+import mg.gov.goodGovernment.notification.Notification;
 import mg.gov.goodGovernment.region.Region;
 import mg.gov.goodGovernment.region.RegionService;
 import org.springframework.security.core.Authentication;
@@ -55,18 +55,10 @@ public class ReportServiceImpl implements ReportService{
                 CitizenNotification citizenNotifications = citizenNotificationService.findByCitizenEmail(
                         dbReport.getCitizen().getEmail()
                 );
-                dbReport.setRegion(dbReport.getRegion()); // Fetch.LAZY
-//                // Récuperation des infos du région du signalement pour l'inclure dans le document mongodb
-//                // parce que le mapping ORM n'est pas reconnu par mongodb
-//                String regionName = (String) authentication.getPrincipal();
-//                Region region =  regionService.findByName(regionName);
-//                // Création d'une nouvelle instance de Report en incluant manuellement le région
-//                Report solvedProblem = new Report(
-//                        dbReport.getId(), dbReport.getCitizen(), dbReport.getDate(), dbReport.getTitle(),
-//                        dbReport.getDescription(), dbReport.getLatitude(), dbReport.getLongitude(),
-//                        region, dbReport.getStatus()
-//                );
-                citizenNotifications.getNotifications().add(new Notification(dbReport, false));
+
+                // Ajout de la nouvelle notification à la liste des notifications du citoyen
+                String regionName = (String) authentication.getPrincipal();
+                citizenNotifications.getNotifications().add(new Notification(dbReport, regionName, false));
                 citizenNotificationService.update(citizenNotifications);
             }
         };
