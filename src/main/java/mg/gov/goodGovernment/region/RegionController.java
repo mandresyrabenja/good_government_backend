@@ -5,9 +5,12 @@ import mg.gov.goodGovernment.http.HttpResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -16,10 +19,31 @@ import java.util.List;
 public class RegionController {
     private final RegionService regionService;
 
+    /**
+     * Avoir le Region correspondant à l'utilisateur authentifié
+     * @param authentication Authentication de l'utilisateur actuel
+     * @return Le Region correspondant à l'authentication
+     */
+    private Region getAuthenticatedRegion(Authentication authentication) {
+        if(!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REGION")))
+            throw new IllegalStateException("Veuillez vous connecter avec une compte région");
+
+        String regionName = (String) authentication.getPrincipal();
+        return regionService.findByName(regionName);
+    }
+
     @GetMapping
     @PreAuthorize("hasAuthority('region:read')")
-    public List<Region> getRegions() {
-        return regionService.findAllRegions();
+    public List<Region> getRegions(Authentication authentication) {
+        try {
+            // Si l'utilisateur est une région alors on ne donne que son compte région
+            List<Region> regions = new ArrayList<>();
+            regions.add( getAuthenticatedRegion(authentication) );
+            return regions;
+        } catch (IllegalStateException e) {
+            // Si l'utilisateur est connecté en tant que gouvernment alors on donne la liste des régions
+            return regionService.findAllRegions();
+        }
     }
 
     @GetMapping(path = "{regionId}")
@@ -56,9 +80,17 @@ public class RegionController {
 
     @DeleteMapping(path = "{regionId}")
     @PreAuthorize("hasAuthority('region:delete')")
-    public ResponseEntity<HttpResponse> deleteRegion(@PathVariable("regionId") Integer id) {
+    public ResponseEntity<HttpResponse> deleteRegion(Authentication authentication,
+                                                     @PathVariable(value = "regionId", required = false) Integer id) {
         try {
-            regionService.deleteRegion(id);
+            // Si aucun id n'est precisé par la requête alors on efface l'utilisateur connecté
+            if(id == null) {
+                regionService.deleteRegion(
+                        getAuthenticatedRegion(authentication).getId()
+                );
+            } else {
+                regionService.deleteRegion(id);
+            }
         }catch (IllegalStateException e) {
             return new ResponseEntity<>(
                     // Si aucune région ne correspond à l'ID
@@ -74,12 +106,22 @@ public class RegionController {
 
     @PutMapping(path = "{regionId}")
     @PreAuthorize("hasAuthority('region:update')")
-    public ResponseEntity<HttpResponse> updateRegion(@PathVariable("regionId") Integer id,
-                                   @RequestParam(required = false) String name,
-                                   @RequestParam(required = false) String password)
+    public ResponseEntity<HttpResponse> updateRegion(Authentication authentication,
+                                                     @PathVariable(value = "regionId", required = false) Integer id,
+                                                     @RequestParam(required = false) String name,
+                                                     @RequestParam(required = false) String password)
     {
         try {
-            regionService.updateRegion(id, name, password);
+            // Si aucun id n'est precisé par la requête alors on modifie l'utilisateur connecté
+            if(id == null) {
+                regionService.updateRegion(
+                        getAuthenticatedRegion(authentication).getId(),
+                        name,
+                        password
+                );
+            } else {
+                regionService.updateRegion(id, name, password);
+            }
         } catch (IllegalStateException e) {
             // Si aucune région ne correspond à l'ID
             return new ResponseEntity<>(
@@ -92,4 +134,5 @@ public class RegionController {
                 HttpStatus.OK
         );
     }
+
 }
