@@ -1,7 +1,5 @@
 package mg.gov.goodGovernment;
 
-import mg.gov.goodGovernment.citizen.Citizen;
-import mg.gov.goodGovernment.citizen.CitizenService;
 import mg.gov.goodGovernment.government.Government;
 import mg.gov.goodGovernment.government.GovernmentService;
 import mg.gov.goodGovernment.region.Region;
@@ -13,8 +11,6 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 
 @SpringBootApplication
@@ -32,8 +28,7 @@ public class GoodGovernmentApplication {
 	 */
 	@Bean
 	public CommandLineRunner runner(RegionService regionService,
-									GovernmentService governmentService,
-									CitizenService citizenService)
+									GovernmentService governmentService)
 	{
 		return args -> {
 			// Les 22 regions de Madagascar
@@ -69,18 +64,6 @@ public class GoodGovernmentApplication {
 
 			// Ajout d'un compte gouvernement
 			governmentService.createGovernment(new Government("admin", "admin"));
-
-			// Ajout d'un compte citoyen
-			citizenService.createCitizen(
-					new Citizen(
-							153_121_042_101l,
-							"Aina",
-							"Rakotoson",
-							LocalDate.of(1995, Month.NOVEMBER, 25),
-							"rakoto@gmail.com",
-							"abcd"
-					)
-			);
 		};
 	}
 
