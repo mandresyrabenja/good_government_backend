@@ -1,6 +1,7 @@
 package mg.gov.goodGovernment.report;
 
 import lombok.AllArgsConstructor;
+import lombok.var;
 import mg.gov.goodGovernment.citizen.Citizen;
 import mg.gov.goodGovernment.citizen.CitizenService;
 import mg.gov.goodGovernment.http.HttpResponse;
@@ -14,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -24,6 +26,25 @@ public class ReportController {
     private final CitizenService citizenService;
     private final RegionService regionService;
 
+    /**
+     * Avoir le top 6 des régions qui ont le plus des signalement
+     */
+    @GetMapping(path = "top6-region-with-most-report")
+    @PreAuthorize("hasAuthority('report:read')")
+    public HashMap<Object, Object> top6RegionWithMostReport() {
+        var regionReportsNb = new HashMap<Object, Object>();
+        List<Object[]> dbRegionsReportNb = reportService.top6RegionWithMostReport();
+        for (Object[] reportNumber : dbRegionsReportNb) {
+            regionReportsNb.put(reportNumber[0], reportNumber[1]);
+        }
+
+        return regionReportsNb;
+    }
+
+    /**
+     * Avoir le nombre des signalements chaque mois de l'année dernière
+     * @return Liste des nombre des signalements par mois de l'année dernière
+     */
     @GetMapping(path = "last-year-monthly-report-nb")
     @PreAuthorize("hasAuthority('report:read')")
     public List<MonthlyReportNumber> lastYearMonthlyReportNumber() {

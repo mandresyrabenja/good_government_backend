@@ -26,4 +26,15 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     )
 
     List<MonthlyReportNumber> getLastYearMonthlyReportNumber(Integer lastYear);
+
+    /**
+     * Avoir le top 6 des régions qui ont le plus des signalement
+     */
+    @Query(
+            value = "SELECT region.name as region, count(report.id) as nb_report " +
+                    "FROM report JOIN region ON report.region_id = region.id " +
+                    "GROUP BY region.name ORDER BY nb_report  DESC LIMIT 6",
+            nativeQuery = true
+    )
+    List<Object[]> top6RegionWithMostReport();
 }

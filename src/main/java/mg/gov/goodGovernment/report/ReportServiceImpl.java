@@ -95,4 +95,9 @@ public class ReportServiceImpl implements ReportService{
     public List<Report> findByRegionIsNull() {
         return reportRepository.findByRegionIsNull();
     }
+
+    @Override
+    public List<Object[]> top6RegionWithMostReport() {
+        return reportRepository.top6RegionWithMostReport();
+    }
 }
