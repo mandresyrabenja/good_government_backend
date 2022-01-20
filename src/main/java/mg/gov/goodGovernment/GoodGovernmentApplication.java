@@ -1,27 +1,10 @@
 package mg.gov.goodGovernment;
 
-import mg.gov.goodGovernment.citizen.Citizen;
-import mg.gov.goodGovernment.citizen.CitizenService;
-import mg.gov.goodGovernment.government.Government;
-import mg.gov.goodGovernment.government.GovernmentService;
-import mg.gov.goodGovernment.notification.CitizenNotification;
-import mg.gov.goodGovernment.notification.CitizenNotificationService;
-import mg.gov.goodGovernment.region.Region;
-import mg.gov.goodGovernment.region.RegionService;
-import mg.gov.goodGovernment.report.Report;
-import mg.gov.goodGovernment.report.ReportService;
-import mg.gov.goodGovernment.report.Status;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
@@ -170,7 +153,6 @@ public class GoodGovernmentApplication {
 //			);
 //
 //			for (Report report : reports) { reportService.insert(report); }
-//
 //		};
 //	}
 

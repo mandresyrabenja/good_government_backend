@@ -58,4 +58,8 @@ public interface ReportService {
      */
     List<Report> findByRegionIsNull();
 
+    /**
+     * Avoir le top 6 des régions qui ont le plus des signalement
+     */
+    List<Object[]> top6RegionWithMostReport();
 }
