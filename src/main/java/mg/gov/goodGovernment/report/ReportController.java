@@ -24,6 +24,12 @@ public class ReportController {
     private final CitizenService citizenService;
     private final RegionService regionService;
 
+    @GetMapping(path = "last-year-monthly-report-nb")
+    @PreAuthorize("hasAuthority('report:read')")
+    public List<MonthlyReportNumber> lastYearMonthlyReportNumber() {
+        return reportService.getLastYearMonthlyReportNumber();
+    }
+
     /**
      * Mettre à jour un signalement<br>
      * @param id ID du signalement

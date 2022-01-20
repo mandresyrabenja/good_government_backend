@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -24,6 +25,11 @@ public class ReportServiceImpl implements ReportService{
     private final ReportRepository reportRepository;
     private final RegionService regionService;
     private final CitizenNotificationService citizenNotificationService;
+
+    @Override
+    public List<MonthlyReportNumber> getLastYearMonthlyReportNumber() {
+        return reportRepository.getLastYearMonthlyReportNumber(LocalDate.now().getYear()-1);
+    }
 
     @Override
     public List<Report> findByCitizen(Citizen citizen) {
