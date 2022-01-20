@@ -4,8 +4,13 @@ import mg.gov.goodGovernment.citizen.Citizen;
 import mg.gov.goodGovernment.citizen.CitizenService;
 import mg.gov.goodGovernment.government.Government;
 import mg.gov.goodGovernment.government.GovernmentService;
+import mg.gov.goodGovernment.notification.CitizenNotification;
+import mg.gov.goodGovernment.notification.CitizenNotificationService;
 import mg.gov.goodGovernment.region.Region;
 import mg.gov.goodGovernment.region.RegionService;
+import mg.gov.goodGovernment.report.Report;
+import mg.gov.goodGovernment.report.ReportService;
+import mg.gov.goodGovernment.report.Status;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
@@ -27,13 +33,13 @@ public class GoodGovernmentApplication {
 
 	/**
 	 * Insertion des données de test dans la base de données
-	 * @param regionService Service d'accès aux base de données d'un compte région
-	 * @param governmentService Service d'accès aux base de données d'un compte gouvernement
 	 */
 	@Bean
 	public CommandLineRunner runner(RegionService regionService,
 									GovernmentService governmentService,
-									CitizenService citizenService)
+									CitizenService citizenService,
+									ReportService reportService,
+									CitizenNotificationService citizenNotificationService)
 	{
 		return args -> {
 			// Les 22 regions de Madagascar
@@ -70,17 +76,100 @@ public class GoodGovernmentApplication {
 			// Ajout d'un compte gouvernement
 			governmentService.createGovernment(new Government("admin", "admin"));
 
-			// Ajout d'un compte citoyen
-			citizenService.createCitizen(
-					new Citizen(
-							153_121_042_101l,
-							"Aina",
-							"Rakotoson",
-							LocalDate.of(1995, Month.NOVEMBER, 25),
-							"rakoto@gmail.com",
-							"abcd"
+			// Citoyens test
+			List<Citizen> citizens = new ArrayList<>();
+			Citizen citizen1 = new Citizen(
+					153_121_042_101L,
+					"Finoana",
+					"Rabenjatiana",
+					LocalDate.of(1960, Month.JUNE, 26),
+					"finoon@gmail.com",
+					"abcd"
+			);
+			citizens.add(citizen1);
+
+			Citizen citizen2 = new Citizen(
+					102_121_042_102L,
+					"Josoa",
+					"Andrianandrasana",
+					LocalDate.of(2002, Month.NOVEMBER, 25),
+					"josoa@gmail.com",
+					"abcd"
+			);
+			citizens.add(citizen2);
+			Citizen citizen3 = new Citizen(
+					153_121_042_101L,
+					"Mandresy",
+					"Rabenja",
+					LocalDate.of(1947, Month.MARCH, 29),
+					"mandresy@gmail.com",
+					"abcd"
+			);
+			citizens.add(citizen3);
+			for (Citizen citizen: citizens) {
+				citizenService.createCitizen(citizen);
+				citizenNotificationService.addNotification(
+						new CitizenNotification(citizen)
+				);
+			}
+
+			List<Report> reports = new ArrayList<>();
+			reports.add(
+					new Report(
+							citizen1, LocalDate.now(), "Fako", "Be dia be fako", 12.1658498463, -15.16458498,
+							regions.get(3), Status.NEW.getStatus()
 					)
 			);
+			reports.add(
+					new Report(
+							citizen1, LocalDate.now(), "Tapaka ny jiro", "Tapaka ny jiro", 12.1658498463, -15.16458498,
+							regions.get(15), Status.NEW.getStatus()
+					)
+			);
+			reports.add(
+					new Report(
+							citizen1, LocalDate.now(), "Tapaka ny rano", "JIRAMA t", 12.1658498463, -15.16458498,
+							null, Status.NEW.getStatus()
+					)
+			);
+			reports.add(
+					new Report(
+							citizen2, LocalDate.now(), "Vidina menaka", "Lasa 12000", 12.1658498463, -15.16458498,
+							regions.get(3), Status.NEW.getStatus()
+					)
+			);
+			reports.add(
+					new Report(
+							citizen2, LocalDate.now(), "Vidimpiainana", "Miakatra", 12.1658498463, -15.16458498,
+							regions.get(11), Status.NEW.getStatus()
+					)
+			);
+			reports.add(
+					new Report(
+							citizen2, LocalDate.now(), "Vidina mofogasy", "200ar", 12.1658498463, -15.16458498,
+							null, Status.NEW.getStatus()
+					)
+			);
+			reports.add(
+					new Report(
+							citizen3, LocalDate.now(), "Rano", "Miakatra ny rano", 12.1658498463, -15.16458498,
+							regions.get(11), Status.NEW.getStatus()
+					)
+			);
+			reports.add(
+					new Report(
+							citizen3, LocalDate.now(), "Lalana", "Simba ny lalana", 12.1658498463, -15.16458498,
+							regions.get(3), Status.NEW.getStatus()
+					)
+			);
+			reports.add(
+					new Report(
+							citizen3, LocalDate.now(), "Fako", "Be dia be", 12.1658498463, -15.16458498,
+							null, Status.NEW.getStatus()
+					)
+			);
+
+			for (Report report : reports) { reportService.insert(report); }
 		};
 	}
 

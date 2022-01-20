@@ -55,4 +55,15 @@ public class Report {
 
     @Column(nullable = false)
     private String status;
+
+    public Report(Citizen citizen, LocalDate date, String title, String description, Double latitude, Double longitude, Region region, String status) {
+        this.citizen = citizen;
+        this.date = date;
+        this.title = title;
+        this.description = description;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.region = region;
+        this.status = status;
+    }
 }
