@@ -13,6 +13,9 @@ import java.util.Optional;
  * @author Mandresy
  */
 public interface ReportService {
+
+    List<MonthlyReportNumber> getLastYearMonthlyReportNumber();
+
     /**
      * Avoir la liste des signalements faits par un citoyen
      * @param citizen Le citoyen filtre

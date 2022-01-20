@@ -1,3 +1,7 @@
+# Ingoer la configuration du base de données localhost
+src/main/resources/application.properties
+target/classes/application.properties
+
 # Compiled class file
 *.class
 
