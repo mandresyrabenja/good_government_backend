@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/governments")
 @AllArgsConstructor
+@CrossOrigin
 public class GovernmentController {
     private final GovernmentService governmentService;
 

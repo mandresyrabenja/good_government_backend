@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/regions")
 @AllArgsConstructor
+@CrossOrigin
 public class RegionController {
     private final RegionService regionService;
 
