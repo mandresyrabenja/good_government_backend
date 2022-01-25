@@ -21,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/reports")
 @AllArgsConstructor
+@CrossOrigin
 public class ReportController {
     private final ReportService reportService;
     private final CitizenService citizenService;
@@ -136,7 +137,7 @@ public class ReportController {
             String regionName = (String) authentication.getPrincipal();
             Region region =  regionService.findByName(regionName);
             return reportService.findByRegion(region);
-        };
+        }
 
         // Si l'utilisateur connecté est de type citoyen
         // Alors on récupere la liste des signalements effectués par lui
@@ -144,7 +145,7 @@ public class ReportController {
             String citizenEmail = (String) authentication.getPrincipal();
             Citizen citizen =  citizenService.findByEmail(citizenEmail);
             return reportService.findByCitizen(citizen);
-        };
+        }
 
         return null;
     }
