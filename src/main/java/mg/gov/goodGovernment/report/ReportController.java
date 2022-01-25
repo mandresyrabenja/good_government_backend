@@ -28,10 +28,26 @@ public class ReportController {
     private final RegionService regionService;
 
     /**
+     * Avoir le top 5 des mots-clés les plus fréquents dans les signalements des problèmes
+     * @return Hashmap avec le mot-clés comme clé et son nombre de répétition comme valeur
+     */
+    @GetMapping(path = "most-repetitive-keywords")
+    @PreAuthorize("hasRole('GOVERNMENT')")
+    public HashMap<Object, Object> top5MostRepetitiveKeyword() {
+        var keywordNbs = new HashMap<Object, Object>();
+        List<Object[]> dbkeywordNbs = reportService.top5MostRepetitiveKeyword();
+        for (Object[] keywordNb : dbkeywordNbs) {
+            keywordNbs.put(keywordNb[0], keywordNb[1]);
+        }
+
+        return keywordNbs;
+    }
+
+    /**
      * Avoir le top 6 des régions qui ont le plus des signalement
      */
     @GetMapping(path = "top6-region-with-most-report")
-    @PreAuthorize("hasAuthority('report:read')")
+    @PreAuthorize("hasRole('GOVERNMENT')")
     public HashMap<Object, Object> top6RegionWithMostReport() {
         var regionReportsNb = new HashMap<Object, Object>();
         List<Object[]> dbRegionsReportNb = reportService.top6RegionWithMostReport();
@@ -47,7 +63,7 @@ public class ReportController {
      * @return Liste des nombre des signalements par mois de l'année dernière
      */
     @GetMapping(path = "last-year-monthly-report-nb")
-    @PreAuthorize("hasAuthority('report:read')")
+    @PreAuthorize("hasRole('GOVERNMENT')")
     public List<MonthlyReportNumber> lastYearMonthlyReportNumber() {
         return reportService.getLastYearMonthlyReportNumber();
     }

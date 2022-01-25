@@ -27,6 +27,11 @@ public class ReportServiceImpl implements ReportService{
     private final CitizenNotificationService citizenNotificationService;
 
     @Override
+    public List<Object[]> top5MostRepetitiveKeyword() {
+        return reportRepository.top5MostRepetitiveKeyword();
+    }
+
+    @Override
     public List<MonthlyReportNumber> getLastYearMonthlyReportNumber() {
         return reportRepository.getLastYearMonthlyReportNumber(LocalDate.now().getYear()-1);
     }
@@ -67,7 +72,7 @@ public class ReportServiceImpl implements ReportService{
                 citizenNotifications.getNotifications().add(new Notification(dbReport, regionName, false));
                 citizenNotificationService.update(citizenNotifications);
             }
-        };
+        }
 
         if(null != regionId) {
             // Si l'utilisateur connecté est de type gouvernement
