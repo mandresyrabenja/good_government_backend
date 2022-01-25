@@ -808,7 +808,7 @@ false YEKT
 false Z
 false Zulu
 </TimeZones>
-      <StartupTime>1641743509</StartupTime>
+      <StartupTime>1642666674</StartupTime>
     </root>
     <database id="2" parent="1" name="gg">
       <ObjectId>24680</ObjectId>
@@ -823,7 +823,7 @@ false Zulu
 13158||-9223372036854775808|U|G
 13158||10|U|G</Grants>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>8837</IntrospectionStateNumber>
+      <IntrospectionStateNumber>10206</IntrospectionStateNumber>
       <Current>1</Current>
     </database>
     <database id="3" parent="1" name="postgres">
@@ -909,7 +909,7 @@ false Zulu
       <Comment>standard public schema</Comment>
       <StateNumber>287</StateNumber>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>8838</IntrospectionStateNumber>
+      <IntrospectionStateNumber>10207</IntrospectionStateNumber>
       <Current>1</Current>
     </schema>
     <extension id="22" parent="2" name="plpgsql">
@@ -1010,103 +1010,115 @@ false Zulu
       <Type>index</Type>
     </access-method>
     <sequence id="34" parent="21" name="sequence_citizen">
-      <ObjectId>32753</ObjectId>
+      <ObjectId>34115</ObjectId>
       <Owner>root</Owner>
-      <StateNumber>8800</StateNumber>
+      <StateNumber>10141</StateNumber>
       <SequenceIdentity>null+50</SequenceIdentity>
       <DataType>bigint|0s</DataType>
     </sequence>
     <sequence id="35" parent="21" name="sequence_government">
-      <ObjectId>32755</ObjectId>
+      <ObjectId>34117</ObjectId>
       <Owner>root</Owner>
-      <StateNumber>8801</StateNumber>
+      <StateNumber>10142</StateNumber>
       <SequenceIdentity>null+50</SequenceIdentity>
       <DataType>bigint|0s</DataType>
     </sequence>
-    <sequence id="36" parent="21" name="sequence_region">
-      <ObjectId>32757</ObjectId>
+    <sequence id="36" parent="21" name="sequence_monthlyreport">
+      <ObjectId>42166</ObjectId>
       <Owner>root</Owner>
-      <StateNumber>8802</StateNumber>
+      <StateNumber>10201</StateNumber>
       <SequenceIdentity>null+50</SequenceIdentity>
       <DataType>bigint|0s</DataType>
     </sequence>
-    <sequence id="37" parent="21" name="sequence_report">
-      <ObjectId>32759</ObjectId>
+    <sequence id="37" parent="21" name="sequence_region">
+      <ObjectId>34119</ObjectId>
       <Owner>root</Owner>
-      <StateNumber>8803</StateNumber>
+      <StateNumber>10143</StateNumber>
       <SequenceIdentity>null+50</SequenceIdentity>
       <DataType>bigint|0s</DataType>
     </sequence>
-    <table id="38" parent="21" name="citizen">
-      <ObjectId>32761</ObjectId>
+    <sequence id="38" parent="21" name="sequence_report">
+      <ObjectId>34121</ObjectId>
       <Owner>root</Owner>
-      <StateNumber>8810</StateNumber>
-    </table>
-    <table id="39" parent="21" name="government">
-      <ObjectId>32769</ObjectId>
+      <StateNumber>10144</StateNumber>
+      <SequenceIdentity>null+50</SequenceIdentity>
+      <DataType>bigint|0s</DataType>
+    </sequence>
+    <table id="39" parent="21" name="citizen">
+      <ObjectId>34123</ObjectId>
       <Owner>root</Owner>
-      <StateNumber>8805</StateNumber>
+      <StateNumber>10151</StateNumber>
     </table>
-    <table id="40" parent="21" name="region">
-      <ObjectId>32777</ObjectId>
+    <table id="40" parent="21" name="government">
+      <ObjectId>34131</ObjectId>
       <Owner>root</Owner>
-      <StateNumber>8811</StateNumber>
+      <StateNumber>10146</StateNumber>
     </table>
-    <table id="41" parent="21" name="report">
-      <ObjectId>32785</ObjectId>
+    <table id="41" parent="21" name="monthly_report">
+      <ObjectId>42161</ObjectId>
       <Owner>root</Owner>
-      <StateNumber>8810</StateNumber>
+      <StateNumber>10205</StateNumber>
     </table>
-    <column id="42" parent="38" name="id">
+    <table id="42" parent="21" name="region">
+      <ObjectId>34139</ObjectId>
+      <Owner>root</Owner>
+      <StateNumber>10152</StateNumber>
+    </table>
+    <table id="43" parent="21" name="report">
+      <ObjectId>34147</ObjectId>
+      <Owner>root</Owner>
+      <StateNumber>10151</StateNumber>
+    </table>
+    <column id="44" parent="39" name="id">
       <Position>1</Position>
       <DataType>bigint|0s</DataType>
       <NotNull>1</NotNull>
-      <StateNumber>8804</StateNumber>
+      <StateNumber>10145</StateNumber>
       <TypeId>20</TypeId>
     </column>
-    <column id="43" parent="38" name="cin">
+    <column id="45" parent="39" name="cin">
       <Position>2</Position>
       <DataType>bigint|0s</DataType>
-      <StateNumber>8804</StateNumber>
+      <StateNumber>10145</StateNumber>
       <TypeId>20</TypeId>
     </column>
-    <column id="44" parent="38" name="dob">
+    <column id="46" parent="39" name="dob">
       <Position>3</Position>
       <DataType>date|0s</DataType>
       <NotNull>1</NotNull>
-      <StateNumber>8804</StateNumber>
+      <StateNumber>10145</StateNumber>
       <TypeId>1082</TypeId>
     </column>
-    <column id="45" parent="38" name="email">
+    <column id="47" parent="39" name="email">
       <Position>4</Position>
       <DataType>varchar(255)|0s</DataType>
-      <StateNumber>8804</StateNumber>
+      <StateNumber>10145</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="46" parent="38" name="first_name">
+    <column id="48" parent="39" name="first_name">
       <Position>5</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
-      <StateNumber>8804</StateNumber>
+      <StateNumber>10145</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="47" parent="38" name="last_name">
+    <column id="49" parent="39" name="last_name">
       <Position>6</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
-      <StateNumber>8804</StateNumber>
+      <StateNumber>10145</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="48" parent="38" name="password">
+    <column id="50" parent="39" name="password">
       <Position>7</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
-      <StateNumber>8804</StateNumber>
+      <StateNumber>10145</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <index id="49" parent="38" name="citizen_pkey">
-      <ObjectId>32767</ObjectId>
-      <StateNumber>8804</StateNumber>
+    <index id="51" parent="39" name="citizen_pkey">
+      <ObjectId>34129</ObjectId>
+      <StateNumber>10145</StateNumber>
       <ColNames>id</ColNames>
       <Unique>1</Unique>
       <Primary>1</Primary>
@@ -1114,9 +1126,9 @@ false Zulu
       <CollationIds>0</CollationIds>
       <ClassIds>3124</ClassIds>
     </index>
-    <index id="50" parent="38" name="uk_rakugiyppspvabpp4p8mtrljd">
-      <ObjectId>32793</ObjectId>
-      <StateNumber>8808</StateNumber>
+    <index id="52" parent="39" name="uk_rakugiyppspvabpp4p8mtrljd">
+      <ObjectId>34155</ObjectId>
+      <StateNumber>10149</StateNumber>
       <ColNames>email</ColNames>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
@@ -1124,41 +1136,41 @@ false Zulu
       <CollationNames>default</CollationNames>
       <ClassIds>3126</ClassIds>
     </index>
-    <key id="51" parent="38" name="citizen_pkey">
-      <ObjectId>32768</ObjectId>
-      <StateNumber>8804</StateNumber>
+    <key id="53" parent="39" name="citizen_pkey">
+      <ObjectId>34130</ObjectId>
+      <StateNumber>10145</StateNumber>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>citizen_pkey</UnderlyingIndexName>
     </key>
-    <key id="52" parent="38" name="uk_rakugiyppspvabpp4p8mtrljd">
-      <ObjectId>32794</ObjectId>
-      <StateNumber>8808</StateNumber>
+    <key id="54" parent="39" name="uk_rakugiyppspvabpp4p8mtrljd">
+      <ObjectId>34156</ObjectId>
+      <StateNumber>10149</StateNumber>
       <ColNames>email</ColNames>
       <UnderlyingIndexName>uk_rakugiyppspvabpp4p8mtrljd</UnderlyingIndexName>
     </key>
-    <column id="53" parent="39" name="id">
+    <column id="55" parent="40" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
-      <StateNumber>8805</StateNumber>
+      <StateNumber>10146</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="54" parent="39" name="login">
+    <column id="56" parent="40" name="login">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
-      <StateNumber>8805</StateNumber>
+      <StateNumber>10146</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="55" parent="39" name="password">
+    <column id="57" parent="40" name="password">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
-      <StateNumber>8805</StateNumber>
+      <StateNumber>10146</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <index id="56" parent="39" name="government_pkey">
-      <ObjectId>32775</ObjectId>
-      <StateNumber>8805</StateNumber>
+    <index id="58" parent="40" name="government_pkey">
+      <ObjectId>34137</ObjectId>
+      <StateNumber>10146</StateNumber>
       <ColNames>id</ColNames>
       <Unique>1</Unique>
       <Primary>1</Primary>
@@ -1166,9 +1178,9 @@ false Zulu
       <CollationIds>0</CollationIds>
       <ClassIds>1978</ClassIds>
     </index>
-    <index id="57" parent="39" name="uk_duf0g63qqsosb4tj2l4is3r7s">
-      <ObjectId>32795</ObjectId>
-      <StateNumber>8809</StateNumber>
+    <index id="59" parent="40" name="uk_duf0g63qqsosb4tj2l4is3r7s">
+      <ObjectId>34157</ObjectId>
+      <StateNumber>10150</StateNumber>
       <ColNames>login</ColNames>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
@@ -1176,120 +1188,53 @@ false Zulu
       <CollationNames>default</CollationNames>
       <ClassIds>3126</ClassIds>
     </index>
-    <key id="58" parent="39" name="government_pkey">
-      <ObjectId>32776</ObjectId>
-      <StateNumber>8805</StateNumber>
+    <key id="60" parent="40" name="government_pkey">
+      <ObjectId>34138</ObjectId>
+      <StateNumber>10146</StateNumber>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>government_pkey</UnderlyingIndexName>
     </key>
-    <key id="59" parent="39" name="uk_duf0g63qqsosb4tj2l4is3r7s">
-      <ObjectId>32796</ObjectId>
-      <StateNumber>8809</StateNumber>
+    <key id="61" parent="40" name="uk_duf0g63qqsosb4tj2l4is3r7s">
+      <ObjectId>34158</ObjectId>
+      <StateNumber>10150</StateNumber>
       <ColNames>login</ColNames>
       <UnderlyingIndexName>uk_duf0g63qqsosb4tj2l4is3r7s</UnderlyingIndexName>
     </key>
-    <column id="60" parent="40" name="id">
-      <Position>1</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-      <StateNumber>8806</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="61" parent="40" name="name">
-      <Position>2</Position>
-      <DataType>varchar(255)|0s</DataType>
-      <NotNull>1</NotNull>
-      <StateNumber>8806</StateNumber>
-      <TypeId>1043</TypeId>
-    </column>
-    <column id="62" parent="40" name="password">
-      <Position>3</Position>
-      <DataType>varchar(255)|0s</DataType>
-      <StateNumber>8806</StateNumber>
-      <TypeId>1043</TypeId>
-    </column>
-    <index id="63" parent="40" name="region_pkey">
-      <ObjectId>32783</ObjectId>
-      <StateNumber>8806</StateNumber>
-      <ColNames>id</ColNames>
-      <Unique>1</Unique>
-      <Primary>1</Primary>
-      <AccessMethodId>403</AccessMethodId>
-      <CollationIds>0</CollationIds>
-      <ClassIds>1978</ClassIds>
-    </index>
-    <key id="64" parent="40" name="region_pkey">
-      <ObjectId>32784</ObjectId>
-      <StateNumber>8806</StateNumber>
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>region_pkey</UnderlyingIndexName>
-    </key>
-    <column id="65" parent="41" name="id">
+    <column id="62" parent="41" name="id">
       <Position>1</Position>
       <DataType>bigint|0s</DataType>
       <NotNull>1</NotNull>
-      <StateNumber>8807</StateNumber>
+      <StateNumber>10200</StateNumber>
       <TypeId>20</TypeId>
     </column>
-    <column id="66" parent="41" name="date">
+    <column id="63" parent="41" name="date">
       <Position>2</Position>
       <DataType>date|0s</DataType>
-      <NotNull>1</NotNull>
-      <StateNumber>8807</StateNumber>
+      <StateNumber>10202</StateNumber>
       <TypeId>1082</TypeId>
     </column>
-    <column id="67" parent="41" name="description">
+    <column id="64" parent="41" name="done_report_nb">
       <Position>3</Position>
-      <DataType>text|0s</DataType>
-      <NotNull>1</NotNull>
-      <StateNumber>8807</StateNumber>
-      <TypeId>25</TypeId>
-    </column>
-    <column id="68" parent="41" name="latitude">
-      <Position>4</Position>
-      <DataType>double precision|0s</DataType>
-      <NotNull>1</NotNull>
-      <StateNumber>8807</StateNumber>
-      <TypeId>701</TypeId>
-    </column>
-    <column id="69" parent="41" name="longitude">
-      <Position>5</Position>
-      <DataType>double precision|0s</DataType>
-      <NotNull>1</NotNull>
-      <StateNumber>8807</StateNumber>
-      <TypeId>701</TypeId>
-    </column>
-    <column id="70" parent="41" name="status">
-      <Position>6</Position>
-      <DataType>varchar(255)|0s</DataType>
-      <NotNull>1</NotNull>
-      <StateNumber>8807</StateNumber>
-      <TypeId>1043</TypeId>
-    </column>
-    <column id="71" parent="41" name="title">
-      <Position>7</Position>
-      <DataType>varchar(255)|0s</DataType>
-      <NotNull>1</NotNull>
-      <StateNumber>8807</StateNumber>
-      <TypeId>1043</TypeId>
-    </column>
-    <column id="72" parent="41" name="citizen_id">
-      <Position>8</Position>
-      <DataType>bigint|0s</DataType>
-      <StateNumber>8807</StateNumber>
-      <TypeId>20</TypeId>
-    </column>
-    <column id="73" parent="41" name="region_id">
-      <Position>9</Position>
       <DataType>integer|0s</DataType>
-      <StateNumber>8807</StateNumber>
+      <StateNumber>10203</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <index id="74" parent="41" name="report_pkey">
-      <ObjectId>32791</ObjectId>
-      <StateNumber>8807</StateNumber>
+    <column id="65" parent="41" name="new_report_nb">
+      <Position>4</Position>
+      <DataType>integer|0s</DataType>
+      <StateNumber>10204</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="66" parent="41" name="processing_report_nb">
+      <Position>5</Position>
+      <DataType>integer|0s</DataType>
+      <StateNumber>10205</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <index id="67" parent="41" name="monthly_report_pkey">
+      <ObjectId>42164</ObjectId>
+      <StateNumber>10200</StateNumber>
       <ColNames>id</ColNames>
       <Unique>1</Unique>
       <Primary>1</Primary>
@@ -1297,28 +1242,143 @@ false Zulu
       <CollationIds>0</CollationIds>
       <ClassIds>3124</ClassIds>
     </index>
-    <key id="75" parent="41" name="report_pkey">
-      <ObjectId>32792</ObjectId>
-      <StateNumber>8807</StateNumber>
+    <key id="68" parent="41" name="monthly_report_pkey">
+      <ObjectId>42165</ObjectId>
+      <StateNumber>10200</StateNumber>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>monthly_report_pkey</UnderlyingIndexName>
+    </key>
+    <column id="69" parent="42" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>10147</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="70" parent="42" name="name">
+      <Position>2</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>10147</StateNumber>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="71" parent="42" name="password">
+      <Position>3</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <StateNumber>10147</StateNumber>
+      <TypeId>1043</TypeId>
+    </column>
+    <index id="72" parent="42" name="region_pkey">
+      <ObjectId>34145</ObjectId>
+      <StateNumber>10147</StateNumber>
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+      <Primary>1</Primary>
+      <AccessMethodId>403</AccessMethodId>
+      <CollationIds>0</CollationIds>
+      <ClassIds>1978</ClassIds>
+    </index>
+    <key id="73" parent="42" name="region_pkey">
+      <ObjectId>34146</ObjectId>
+      <StateNumber>10147</StateNumber>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>region_pkey</UnderlyingIndexName>
+    </key>
+    <column id="74" parent="43" name="id">
+      <Position>1</Position>
+      <DataType>bigint|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>10148</StateNumber>
+      <TypeId>20</TypeId>
+    </column>
+    <column id="75" parent="43" name="date">
+      <Position>2</Position>
+      <DataType>date|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>10148</StateNumber>
+      <TypeId>1082</TypeId>
+    </column>
+    <column id="76" parent="43" name="description">
+      <Position>3</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>10148</StateNumber>
+      <TypeId>25</TypeId>
+    </column>
+    <column id="77" parent="43" name="latitude">
+      <Position>4</Position>
+      <DataType>double precision|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>10148</StateNumber>
+      <TypeId>701</TypeId>
+    </column>
+    <column id="78" parent="43" name="longitude">
+      <Position>5</Position>
+      <DataType>double precision|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>10148</StateNumber>
+      <TypeId>701</TypeId>
+    </column>
+    <column id="79" parent="43" name="status">
+      <Position>6</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>10148</StateNumber>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="80" parent="43" name="title">
+      <Position>7</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>10148</StateNumber>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="81" parent="43" name="citizen_id">
+      <Position>8</Position>
+      <DataType>bigint|0s</DataType>
+      <StateNumber>10148</StateNumber>
+      <TypeId>20</TypeId>
+    </column>
+    <column id="82" parent="43" name="region_id">
+      <Position>9</Position>
+      <DataType>integer|0s</DataType>
+      <StateNumber>10148</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <index id="83" parent="43" name="report_pkey">
+      <ObjectId>34153</ObjectId>
+      <StateNumber>10148</StateNumber>
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+      <Primary>1</Primary>
+      <AccessMethodId>403</AccessMethodId>
+      <CollationIds>0</CollationIds>
+      <ClassIds>3124</ClassIds>
+    </index>
+    <key id="84" parent="43" name="report_pkey">
+      <ObjectId>34154</ObjectId>
+      <StateNumber>10148</StateNumber>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>report_pkey</UnderlyingIndexName>
     </key>
-    <foreign-key id="76" parent="41" name="fk8eqn58qcw86gbu138exjste68">
-      <ObjectId>32797</ObjectId>
-      <StateNumber>8810</StateNumber>
+    <foreign-key id="85" parent="43" name="fk8eqn58qcw86gbu138exjste68">
+      <ObjectId>34159</ObjectId>
+      <StateNumber>10151</StateNumber>
       <ColNames>citizen_id</ColNames>
-      <RefTableId>32761</RefTableId>
+      <RefTableId>34123</RefTableId>
       <RefColPositions>1</RefColPositions>
       <RefTableName>citizen</RefTableName>
       <RefKeyName>citizen_pkey</RefKeyName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="77" parent="41" name="fklw3a96pfaoh5qg9ix43ng9ajd">
-      <ObjectId>32802</ObjectId>
-      <StateNumber>8811</StateNumber>
+    <foreign-key id="86" parent="43" name="fklw3a96pfaoh5qg9ix43ng9ajd">
+      <ObjectId>34164</ObjectId>
+      <StateNumber>10152</StateNumber>
       <ColNames>region_id</ColNames>
-      <RefTableId>32777</RefTableId>
+      <RefTableId>34139</RefTableId>
       <RefColPositions>1</RefColPositions>
       <RefTableName>region</RefTableName>
       <RefKeyName>region_pkey</RefKeyName>

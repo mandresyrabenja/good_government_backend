@@ -1,5 +1,9 @@
 package mg.gov.goodGovernment;
 
+import lombok.var;
+import mg.gov.goodGovernment.statistic.MonthlyReport;
+import mg.gov.goodGovernment.statistic.MonthlyReportService;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
@@ -10,6 +14,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @SpringBootApplication
@@ -35,6 +42,61 @@ public class GoodGovernmentApplication {
 		urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
 		return new CorsFilter(urlBasedCorsConfigurationSource);
 	}
+
+//	@Bean
+//	public CommandLineRunner insertMonthlyReport(MonthlyReportService monthlyReportService) {
+//		return args -> {
+//			var monthlyReports = new ArrayList<MonthlyReport>();
+//			monthlyReports.add(new MonthlyReport(
+//					LocalDate.of(2021, Month.FEBRUARY, 28),
+//					7, 5, 8
+//			));
+//			monthlyReports.add(new MonthlyReport(
+//					LocalDate.of(2021, Month.MARCH, 31),
+//					5, 6, 5
+//			));
+//			monthlyReports.add(new MonthlyReport(
+//					LocalDate.of(2021, Month.APRIL, 30),
+//					7, 3, 9
+//			));
+//			monthlyReports.add(new MonthlyReport(
+//					LocalDate.of(2021, Month.MAY, 31),
+//					9, 6, 10
+//			));
+//			monthlyReports.add(new MonthlyReport(
+//					LocalDate.of(2021, Month.JUNE, 30),
+//					8, 8, 5
+//			));
+//			monthlyReports.add(new MonthlyReport(
+//					LocalDate.of(2021, Month.JULY, 31),
+//					3, 5, 4
+//			));
+//			monthlyReports.add(new MonthlyReport(
+//					LocalDate.of(2021, Month.AUGUST, 31),
+//					8, 7, 10
+//			));
+//			monthlyReports.add(new MonthlyReport(
+//					LocalDate.of(2021, Month.SEPTEMBER, 30),
+//					9, 5, 9
+//			));
+//			monthlyReports.add(new MonthlyReport(
+//					LocalDate.of(2021, Month.OCTOBER, 31),
+//					4, 9, 9
+//			));
+//			monthlyReports.add(new MonthlyReport(
+//					LocalDate.of(2021, Month.NOVEMBER, 30),
+//					8, 6, 7
+//			));
+//			monthlyReports.add(new MonthlyReport(
+//					LocalDate.of(2021, Month.DECEMBER, 31),
+//					10, 8, 9
+//			));
+//
+//			for (MonthlyReport monthlyReport : monthlyReports) {
+//				monthlyReportService.insertMonthlyReport(monthlyReport);
+//			}
+//		};
+//	}
 
 //	/**
 //	 * Insertion des données de test dans la base de données
