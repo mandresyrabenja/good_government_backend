@@ -1,22 +1,14 @@
 package mg.gov.goodGovernment;
 
-import lombok.var;
-import mg.gov.goodGovernment.statistic.MonthlyReport;
-import mg.gov.goodGovernment.statistic.MonthlyReportService;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 @SpringBootApplication

@@ -37,4 +37,20 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
             nativeQuery = true
     )
     List<Object[]> top6RegionWithMostReport();
+
+    /**
+     * Avoir le top 5 des mots-clés les plus fréquents dans les signalements des problèmes
+     * @return le top 5 des mots-clés les plus fréquents dans les signalements des problèmes
+     */
+    @Query(
+            value = "SELECT keyword, count(*) as repetition\n" +
+                    "FROM (\n" +
+                    "         SELECT regexp_split_to_table(title, '\\s') as keyword\n" +
+                    "         FROM report\n" +
+                    "     ) t\n" +
+                    "WHERE keyword != 'ny'\n" +
+                    "GROUP BY keyword ORDER BY repetition DESC LIMIT 5",
+            nativeQuery = true
+    )
+    List<Object[]> top5MostRepetitiveKeyword();
 }

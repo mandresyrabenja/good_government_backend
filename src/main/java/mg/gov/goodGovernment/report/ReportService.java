@@ -13,7 +13,16 @@ import java.util.Optional;
  * @author Mandresy
  */
 public interface ReportService {
+    /**
+     * Avoir le top 5 des mots-clés les plus fréquents dans les signalements des problèmes
+     * @return le top 5 des mots-clés les plus fréquents dans les signalements des problèmes
+     */
+    List<Object[]> top5MostRepetitiveKeyword();
 
+    /**
+     * Avoir les nombres des signalements mensuel de l'année dernière
+     * @return les nombres des signalements mensuel de l'année dernière
+     */
     List<MonthlyReportNumber> getLastYearMonthlyReportNumber();
 
     /**
