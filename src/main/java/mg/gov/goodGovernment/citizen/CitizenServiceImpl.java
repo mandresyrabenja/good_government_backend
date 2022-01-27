@@ -13,12 +13,25 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
 public class CitizenServiceImpl implements CitizenService, UserDetailsService {
     private final CitizenRepository citizenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final Pattern emailPattern = Pattern.compile("[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
+
+    /**
+     * Vérification s'une  chaîne des caractères corespond à un regex donnée
+     * @param string La chaîne des caractères
+     * @param pattern Le regex
+     * @return <code>true</code> si la chaîne des caractères suive les règles imposer par le regex.<br>
+     *         <code>false</code> si la condition n'est pas satisfait
+     */
+    private boolean patternMatches(String string, Pattern pattern) {
+        return pattern.matcher(string).matches();
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) {
@@ -41,6 +54,11 @@ public class CitizenServiceImpl implements CitizenService, UserDetailsService {
 
     @Override
     public void createCitizen(Citizen citizen) {
+
+        // Vérification si l'email est valide
+        if(!patternMatches(citizen.getEmail(), this.emailPattern))
+            throw new IllegalStateException("L'email entré n'est pas valide");
+        
         // Un email est unique
         if(citizenRepository.existsByEmail(citizen.getEmail())) {
             throw new IllegalStateException("Un autre citoyen a déjà la même email");
