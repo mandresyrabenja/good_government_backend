@@ -3,9 +3,10 @@ package mg.gov.goodGovernment.citizen;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import mg.gov.goodGovernment.report.Report;
-import mg.gov.goodGovernment.security.Sha256;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -48,7 +49,6 @@ public class Citizen {
 
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Setter(AccessLevel.NONE)
     private String password;
 
     @org.springframework.data.annotation.Transient
@@ -79,10 +79,6 @@ public class Citizen {
         this.dob = dob;
         this.cin = cin;
         this.email = email;
-        setPassword(password);
-    }
-
-    public void setPassword(String password) {
-        this.password = Sha256.hash(password);
+        this.password = password;
     }
 }

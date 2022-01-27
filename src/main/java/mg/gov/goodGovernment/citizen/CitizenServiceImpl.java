@@ -3,6 +3,7 @@ package mg.gov.goodGovernment.citizen;
 import lombok.AllArgsConstructor;
 import mg.gov.goodGovernment.security.AppUserRole;
 import mg.gov.goodGovernment.authentication.ApplicationUser;
+import mg.gov.goodGovernment.security.Sha256;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,12 +14,26 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
 public class CitizenServiceImpl implements CitizenService, UserDetailsService {
     private final CitizenRepository citizenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final Pattern emailPattern = Pattern.compile("[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
+    private final Pattern accentedPattern = Pattern.compile("(.)*[À-ú](.)*");
+
+    /**
+     * Vérification s'une  chaîne des caractères corespond à un regex donnée
+     * @param string La chaîne des caractères
+     * @param pattern Le regex
+     * @return <code>true</code> si la chaîne des caractères suive les règles imposer par le regex.<br>
+     *         <code>false</code> si la condition n'est pas satisfait
+     */
+    static boolean patternMatches(String string, Pattern pattern) {
+        return pattern.matcher(string).matches();
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) {
@@ -41,6 +56,22 @@ public class CitizenServiceImpl implements CitizenService, UserDetailsService {
 
     @Override
     public void createCitizen(Citizen citizen) {
+
+        // Vérification si le mot de passe a 8 caractère ou plus
+        if( (citizen.getPassword().length() < 8) )
+            throw new IllegalStateException("Le mot de passe doit avoir au minimum 8 caractère");
+
+        // Vérification si le mot de passe n'a pas de lettre accentué
+        if(CitizenServiceImpl.patternMatches(citizen.getPassword(), accentedPattern))
+            throw new IllegalStateException("Le mot de passe ne doit avoir aucun accènt");
+
+        // Cryptage du mdp en sha256
+        citizen.setPassword( Sha256.hash(citizen.getPassword()) );
+
+        // Vérification si l'email est valide
+        if(!patternMatches(citizen.getEmail(), this.emailPattern))
+            throw new IllegalStateException("L'email entré n'est pas valide");
+
         // Un email est unique
         if(citizenRepository.existsByEmail(citizen.getEmail())) {
             throw new IllegalStateException("Un autre citoyen a déjà la même email");
