@@ -10,6 +10,7 @@ import mg.gov.goodGovernment.region.Region;
 import mg.gov.goodGovernment.region.RegionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,8 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +39,19 @@ public class ReportController {
     private final RegionService regionService;
     @Value("${file.upload.location}")
     private String FILE_DIRECTORY;
+
+    @GetMapping(path = "/{id}/photo", produces = MediaType.IMAGE_PNG_VALUE)
+    @PreAuthorize("hasRole('GOVERNMENT')")
+    public byte[] getPhoto(@PathVariable Long id) {
+        try {
+            return Files.readAllBytes(
+                    Paths.get(System.getProperty("user.home") + "/gg/report/" + id.toString() + ".png")
+            );
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
 
     /**
      * Avoir le top 5 des mots-clés les plus fréquents dans les signalements des problèmes
@@ -179,7 +195,6 @@ public class ReportController {
     /**
      * Créer un signalement des problèmes
      * @param authentication Authentication fournis par le token
-     * @return
      */
     @PostMapping
     @PreAuthorize("hasAuthority('report:create')")
