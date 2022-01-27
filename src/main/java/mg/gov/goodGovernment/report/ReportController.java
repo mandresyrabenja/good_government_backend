@@ -151,9 +151,9 @@ public class ReportController {
      * Avoir la liste des signalements pas encore affecté à une région
      * @return La liste des signalements pas encore affecté à une région
      */
-    private List<Report> findNotAssignedReport() {
+    private List<Report> findNotAssignedReport(Integer page) {
         // Récuperation de la liste des signalements pas encore affecté à une région
-        return reportService.findByRegionIsNull();
+        return reportService.findByRegionIsNull(page);
     }
 
     /**
@@ -165,12 +165,13 @@ public class ReportController {
     @GetMapping
     @PreAuthorize("hasAuthority('report:read')")
     public List<Report> findReport(Authentication authentication,
-            @RequestParam(value = "region", required = false) String regionId)
+                                   @RequestParam(value = "region", required = false) String regionId,
+                                   @RequestParam Integer page)
     {
         // Récuperer la liste des signalements pas encore affecté
         // si regionId est null
         if ("null".equalsIgnoreCase(regionId)) {
-            return findNotAssignedReport();
+            return findNotAssignedReport(page);
         }
 
         // Si l'utilisateur connecté est de type région
@@ -178,7 +179,7 @@ public class ReportController {
         if( authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REGION")) ) {
             String regionName = (String) authentication.getPrincipal();
             Region region =  regionService.findByName(regionName);
-            return reportService.findByRegion(region);
+            return reportService.findByRegion(region, page);
         }
 
         // Si l'utilisateur connecté est de type citoyen
@@ -186,7 +187,7 @@ public class ReportController {
         if( authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CITIZEN")) ) {
             String citizenEmail = (String) authentication.getPrincipal();
             Citizen citizen =  citizenService.findByEmail(citizenEmail);
-            return reportService.findByCitizen(citizen);
+            return reportService.findByCitizen(citizen, page);
         }
 
         return null;

@@ -30,7 +30,7 @@ public interface ReportService {
      * @param citizen Le citoyen filtre
      * @return La liste des signalements faits par le citoyen
      */
-    List<Report> findByCitizen(Citizen citizen);
+    List<Report> findByCitizen(Citizen citizen, Integer page);
 
     /**
      * Inserer un signalement de problème aux base de données
@@ -59,13 +59,13 @@ public interface ReportService {
      * @param region La région filtre
      * @return Liste des signalèment fait dans une région
      */
-    List<Report> findByRegion(Region region);
+    List<Report> findByRegion(Region region, Integer page);
 
     /**
      * Avoir la liste des signalèment pas encore affecté à une région
      * @return Liste des signalèment pas encore affecté à une région
      */
-    List<Report> findByRegionIsNull();
+    List<Report> findByRegionIsNull(Integer page);
 
     /**
      * Avoir le top 6 des régions qui ont le plus des signalement

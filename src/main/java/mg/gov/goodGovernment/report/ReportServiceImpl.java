@@ -7,6 +7,7 @@ import mg.gov.goodGovernment.notification.CitizenNotificationService;
 import mg.gov.goodGovernment.notification.Notification;
 import mg.gov.goodGovernment.region.Region;
 import mg.gov.goodGovernment.region.RegionService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -37,8 +38,8 @@ public class ReportServiceImpl implements ReportService{
     }
 
     @Override
-    public List<Report> findByCitizen(Citizen citizen) {
-        return reportRepository.findByCitizen(citizen);
+    public List<Report> findByCitizen(Citizen citizen, Integer page) {
+        return reportRepository.findByCitizen(citizen, PageRequest.of(page, 10));
     }
 
     @Override
@@ -92,13 +93,13 @@ public class ReportServiceImpl implements ReportService{
     }
 
     @Override
-    public List<Report> findByRegion(Region region) {
-        return reportRepository.findByRegion(region);
+    public List<Report> findByRegion(Region region, Integer page) {
+        return reportRepository.findByRegion(region, PageRequest.of(page, 10));
     }
 
     @Override
-    public List<Report> findByRegionIsNull() {
-        return reportRepository.findByRegionIsNull();
+    public List<Report> findByRegionIsNull(Integer page) {
+        return reportRepository.findByRegionIsNull(PageRequest.of(page, 10));
     }
 
     @Override

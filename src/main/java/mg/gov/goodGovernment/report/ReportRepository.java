@@ -2,6 +2,7 @@ package mg.gov.goodGovernment.report;
 
 import mg.gov.goodGovernment.citizen.Citizen;
 import mg.gov.goodGovernment.region.Region;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -11,11 +12,11 @@ import java.util.List;
  * JpaRepository du table report
  */
 public interface ReportRepository extends JpaRepository<Report, Long> {
-    List<Report> findByRegion(Region region);
+    List<Report> findByRegion(Region region, Pageable pageable);
 
-    List<Report> findByRegionIsNull();
+    List<Report> findByRegionIsNull(Pageable pageable);
 
-    List<Report> findByCitizen(Citizen citizen);
+    List<Report> findByCitizen(Citizen citizen, Pageable pageable);
 
     @Query("SELECT new mg.gov.goodGovernment.report.MonthlyReportNumber( " +
                 "EXTRACT(MONTH FROM DATE_TRUNC('month',r.date) ) AS  month, COUNT(r.id) AS reportNumber" +
