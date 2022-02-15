@@ -4,11 +4,6 @@
       "name": "application.jwt",
       "type": "mg.gov.goodGovernment.security.jwt.JwtConfig",
       "sourceType": "mg.gov.goodGovernment.security.jwt.JwtConfig"
-    },
-    {
-      "name": "file.upload",
-      "type": "mg.gov.goodGovernment.file.FileUploadProperties",
-      "sourceType": "mg.gov.goodGovernment.file.FileUploadProperties"
     }
   ],
   "properties": [
@@ -26,11 +21,6 @@
       "name": "application.jwt.token-prefix",
       "type": "java.lang.String",
       "sourceType": "mg.gov.goodGovernment.security.jwt.JwtConfig"
-    },
-    {
-      "name": "file.upload.location",
-      "type": "java.lang.String",
-      "sourceType": "mg.gov.goodGovernment.file.FileUploadProperties"
     }
   ],
   "hints": []

@@ -5,6 +5,7 @@ import mg.gov.goodGovernment.region.Region;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -12,6 +13,18 @@ import java.util.List;
  * JpaRepository du table report
  */
 public interface ReportRepository extends JpaRepository<Report, Long> {
+
+    /**
+     * Chercher les signalements qui contient les mots clés entrées
+     * @param region_id ID du région qui fait la recherche
+     * @param keyword Mots-clés
+     * @return Liste des signalements qui contient les mots clés entrées
+     */
+    @Query("SELECT r FROM Report r WHERE r.region.id = :region_id AND " +
+            "(lower(r.title) LIKE lower( concat('%', :keyword, '%') ) " +
+            "OR lower(r.description) LIKE lower( concat('%', :keyword, '%') ) )")
+    List<Report> search(@Param("region_id") Integer region_id, @Param("keyword") String keyword);
+
     List<Report> findByRegion(Region region, Pageable pageable);
 
     List<Report> findByRegionIsNull(Pageable pageable);

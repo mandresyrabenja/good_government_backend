@@ -28,6 +28,11 @@ public class ReportServiceImpl implements ReportService{
     private final CitizenNotificationService citizenNotificationService;
 
     @Override
+    public List<Report> searchReport(Region region, String keyword) {
+        return this.reportRepository.search(region.getId(), keyword);
+    }
+
+    @Override
     public List<Object[]> top5MostRepetitiveKeyword() {
         return reportRepository.top5MostRepetitiveKeyword();
     }

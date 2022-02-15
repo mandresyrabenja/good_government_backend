@@ -27,6 +27,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/reports")
@@ -39,6 +40,24 @@ public class ReportController {
     private final RegionService regionService;
     @Value("${file.upload.location}")
     private String FILE_DIRECTORY;
+
+    /**
+     * Recherche des signalements
+     * @param authentication Authentification du région qui fait la recherche
+     * @param keyword Mots-clés du recherche
+     * @return Liste des signalements correspondant au recherche
+     */
+    @GetMapping("search")
+    @PreAuthorize("hasRole('REGION')")
+    public List<Report> searchReport(Authentication authentication, @RequestParam String keyword) {
+        // Authentification du région connecté
+        if( authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REGION")) ) {
+            String regionName = (String) authentication.getPrincipal();
+            Region region =  regionService.findByName(regionName);
+            return this.reportService.searchReport(region, keyword);
+        }
+        else throw new IllegalStateException("Aucun région connecté");
+    }
 
     @GetMapping(path = "/{id}/photo", produces = MediaType.IMAGE_PNG_VALUE)
     @PreAuthorize("hasRole('GOVERNMENT')")

@@ -13,6 +13,15 @@ import java.util.Optional;
  * @author Mandresy
  */
 public interface ReportService {
+
+    /**
+     * Rechercher des signalements en utilisant un mot-clés
+     * @param region region qui fait la recherche
+     * @param keyword Mots-clés
+     * @return Liste des signalements qui a le mots-clés
+     */
+    List<Report> searchReport(Region region, String keyword);
+
     /**
      * Avoir le top 5 des mots-clés les plus fréquents dans les signalements des problèmes
      * @return le top 5 des mots-clés les plus fréquents dans les signalements des problèmes
