@@ -14,6 +14,23 @@ import java.util.List;
  */
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
+
+    /**
+     * Avoir la liste des mots-clés dans les signalements des problèmes
+     * @return la liste des mots-clés dans les signalements des problèmes
+     */
+    @Query(
+            value = "SELECT keyword, count(lower(keyword)) as repetition\n" +
+                    "FROM (\n" +
+                    "         SELECT regexp_split_to_table(title, '\\s') as keyword\n" +
+                    "         FROM report\n" +
+                    "     ) AS k \n" +
+                    "WHERE keyword != 'ny'\n" +
+                    "GROUP BY keyword ORDER BY repetition DESC LIMIT 6",
+            nativeQuery = true
+    )
+    List<Object[]> listKeywords();
+
     /**
      * Chercher les signalements qui contient les mots clés entrées
      * @param region_id ID du région qui fait la recherche
@@ -61,7 +78,7 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
                     "FROM (\n" +
                     "         SELECT regexp_split_to_table(title, '\\s') as keyword\n" +
                     "         FROM report\n" +
-                    "     ) t\n" +
+                    "     ) AS k \n" +
                     "WHERE keyword != 'ny'\n" +
                     "GROUP BY keyword ORDER BY repetition DESC LIMIT 5",
             nativeQuery = true

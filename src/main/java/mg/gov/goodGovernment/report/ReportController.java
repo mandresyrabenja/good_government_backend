@@ -27,7 +27,6 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/reports")
@@ -40,6 +39,16 @@ public class ReportController {
     private final RegionService regionService;
     @Value("${file.upload.location}")
     private String FILE_DIRECTORY;
+
+    /**
+     * Avoir la liste des mots-clés des signalements des problèmes.<br>
+     * Cet fonction est surtout utile pour le trie des signalement par catégorie(mot-clés)<br>
+     */
+    @GetMapping("/keywords")
+    @PreAuthorize("hasRole('REGION')")
+    public List<String> getKeywords() {
+        return this.reportService.getKeywords();
+    }
 
     /**
      * Recherche des signalements

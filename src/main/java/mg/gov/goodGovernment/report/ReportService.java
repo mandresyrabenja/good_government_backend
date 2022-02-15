@@ -15,6 +15,12 @@ import java.util.Optional;
 public interface ReportService {
 
     /**
+     * Avoir la liste des mot-clés des signalements de problèmes
+     * @return la liste des mot-clés des signalements de problèmes
+     */
+    List<String> getKeywords();
+
+    /**
      * Rechercher des signalements en utilisant un mot-clés
      * @param region region qui fait la recherche
      * @param keyword Mots-clés
