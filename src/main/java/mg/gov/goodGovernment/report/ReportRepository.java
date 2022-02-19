@@ -14,7 +14,6 @@ import java.util.List;
  */
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
-
     /**
      * Avoir la liste des mots-clés dans les signalements des problèmes
      * @return la liste des mots-clés dans les signalements des problèmes

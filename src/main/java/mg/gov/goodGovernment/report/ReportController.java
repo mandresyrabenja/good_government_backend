@@ -1,5 +1,6 @@
 package mg.gov.goodGovernment.report;
 
+import com.google.common.collect.Sets;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
@@ -27,6 +28,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/v1/reports")
@@ -58,12 +60,19 @@ public class ReportController {
      */
     @GetMapping("search")
     @PreAuthorize("hasRole('REGION')")
-    public List<Report> searchReport(Authentication authentication, @RequestParam String keyword) {
+    public Set<Report> searchReport(
+            Authentication authentication, @RequestParam String keyword,
+            @RequestParam(required = false) String category)
+    {
         // Authentification du région connecté
         if( authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REGION")) ) {
             String regionName = (String) authentication.getPrincipal();
             Region region =  regionService.findByName(regionName);
-            return this.reportService.searchReport(region, keyword);
+
+            if(null == category) return Sets.newHashSet( this.reportService.searchReport(region, keyword) );
+            else {
+                return this.reportService.searchReportWithCategory(region.getId(), keyword, category);
+            }
         }
         else throw new IllegalStateException("Aucun région connecté");
     }

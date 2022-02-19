@@ -7,12 +7,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Interface du service d'accèss aux base de donnée de la classe Report
  * @author Mandresy
  */
 public interface ReportService {
+
+    /**
+     * Rechercher des signalements en utilisant des mot-clés est un catégorie
+     * @param keyword Mot-clés
+     * @param category Categorie du signalement
+     * @return Liste des signalements correspondant aux critères du recherche
+     */
+    Set<Report> searchReportWithCategory(Integer region_id, String keyword, String category);
 
     /**
      * Avoir la liste des mot-clés des signalements de problèmes

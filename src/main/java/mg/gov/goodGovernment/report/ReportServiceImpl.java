@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 /**
  * Une implémentation de l'interface du couche service de la classe Report
@@ -28,6 +30,15 @@ public class ReportServiceImpl implements ReportService{
     private final ReportRepository reportRepository;
     private final RegionService regionService;
     private final CitizenNotificationService citizenNotificationService;
+
+    @Override
+    public Set<Report> searchReportWithCategory(Integer region_id, String keyword, String category) {
+        Set<Report> results = this.reportRepository.search(region_id, keyword).stream().distinct()
+            .filter(
+                this.reportRepository.search(region_id, category)::contains
+            ).collect(Collectors.toSet());
+        return results;
+    }
 
     @Override
     public List<String> getKeywords() {
