@@ -34,7 +34,7 @@ public class Region {
     private String password;
 
     @org.springframework.data.annotation.Transient
-    @OneToMany(mappedBy = "region")
+    @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("region_report")
     private Collection<Report> reports;
 
