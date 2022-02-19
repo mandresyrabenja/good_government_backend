@@ -13,6 +13,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controlleur HTTP de l'entité Region
+ * @author Mandresy
+ */
 @RestController
 @RequestMapping("api/v1/regions")
 @AllArgsConstructor
@@ -33,9 +37,16 @@ public class RegionController {
         return regionService.findByName(regionName);
     }
 
+    /**
+     * Avoir la liste des régions corresponant au numéro de page entré.<br>
+     * Une page contient 10 régions.
+     * @param authentication Authentification de l'utilisateur qui fait la requete
+     * @param page Numero de page demandé celui qui fait la requete
+     * @return Liste des régions correspondant au numéro de page entré
+     */
     @GetMapping
     @PreAuthorize("hasAuthority('region:read')")
-    public List<Region> getRegions(Authentication authentication) {
+    public List<Region> getRegions(Authentication authentication, @RequestParam(required = false) Integer page) {
         try {
             // Si l'utilisateur est une région alors on ne donne que son compte région
             List<Region> regions = new ArrayList<>();
@@ -43,7 +54,7 @@ public class RegionController {
             return regions;
         } catch (IllegalStateException e) {
             // Si l'utilisateur est connecté en tant que gouvernment alors on donne la liste des régions
-            return regionService.findAllRegions();
+            return regionService.findAllRegions(page);
         }
     }
 

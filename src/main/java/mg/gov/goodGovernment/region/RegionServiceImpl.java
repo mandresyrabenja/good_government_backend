@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mg.gov.goodGovernment.authentication.ApplicationUser;
 import mg.gov.goodGovernment.security.AppUserRole;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,6 +16,10 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Implémentantion du service de l'entité Region
+ * @author Mandresy
+ */
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -44,8 +50,8 @@ public class RegionServiceImpl implements RegionService, UserDetailsService {
         regionRepository.save(region);
     }
 
-    public List<Region> findAllRegions() {
-        return regionRepository.findAll();
+    public List<Region> findAllRegions(Integer page) {
+        return regionRepository.findByOrderByName(PageRequest.of(page, 10));
     }
 
     public void deleteRegion(Integer id) {
