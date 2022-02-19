@@ -1,31 +1,94 @@
 package mg.gov.goodGovernment.report;
 
-import lombok.AllArgsConstructor;
+import com.google.common.collect.Sets;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.var;
 import mg.gov.goodGovernment.citizen.Citizen;
 import mg.gov.goodGovernment.citizen.CitizenService;
 import mg.gov.goodGovernment.http.HttpResponse;
 import mg.gov.goodGovernment.region.Region;
 import mg.gov.goodGovernment.region.RegionService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/v1/reports")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @CrossOrigin
+@Slf4j
 public class ReportController {
     private final ReportService reportService;
     private final CitizenService citizenService;
     private final RegionService regionService;
+    @Value("${file.upload.location}")
+    private String FILE_DIRECTORY;
+
+    /**
+     * Avoir la liste des mots-clés des signalements des problèmes.<br>
+     * Cet fonction est surtout utile pour le trie des signalement par catégorie(mot-clés)<br>
+     */
+    @GetMapping("/keywords")
+    @PreAuthorize("hasRole('REGION')")
+    public List<String> getKeywords() {
+        return this.reportService.getKeywords();
+    }
+
+    /**
+     * Recherche des signalements
+     * @param authentication Authentification du région qui fait la recherche
+     * @param keyword Mots-clés du recherche
+     * @return Liste des signalements correspondant au recherche
+     */
+    @GetMapping("search")
+    @PreAuthorize("hasRole('REGION')")
+    public Set<Report> searchReport(
+            Authentication authentication, @RequestParam String keyword,
+            @RequestParam(required = false) String category)
+    {
+        // Authentification du région connecté
+        if( authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REGION")) ) {
+            String regionName = (String) authentication.getPrincipal();
+            Region region =  regionService.findByName(regionName);
+
+            if(null == category) return Sets.newHashSet( this.reportService.searchReport(region, keyword) );
+            else {
+                return this.reportService.searchReportWithCategory(region.getId(), keyword, category);
+            }
+        }
+        else throw new IllegalStateException("Aucun région connecté");
+    }
+
+    @GetMapping(path = "/{id}/photo", produces = MediaType.IMAGE_PNG_VALUE)
+    @PreAuthorize("hasRole('GOVERNMENT')")
+    public byte[] getPhoto(@PathVariable Long id) {
+        try {
+            return Files.readAllBytes(
+                    Paths.get(System.getProperty("user.home") + "/gg/report/" + id.toString() + ".png")
+            );
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
 
     /**
      * Avoir le top 5 des mots-clés les plus fréquents dans les signalements des problèmes
@@ -125,9 +188,9 @@ public class ReportController {
      * Avoir la liste des signalements pas encore affecté à une région
      * @return La liste des signalements pas encore affecté à une région
      */
-    private List<Report> findNotAssignedReport() {
+    private List<Report> findNotAssignedReport(Integer page) {
         // Récuperation de la liste des signalements pas encore affecté à une région
-        return reportService.findByRegionIsNull();
+        return reportService.findByRegionIsNull(page);
     }
 
     /**
@@ -139,12 +202,13 @@ public class ReportController {
     @GetMapping
     @PreAuthorize("hasAuthority('report:read')")
     public List<Report> findReport(Authentication authentication,
-            @RequestParam(value = "region", required = false) String regionId)
+                                   @RequestParam(value = "region", required = false) String regionId,
+                                   @RequestParam Integer page)
     {
         // Récuperer la liste des signalements pas encore affecté
         // si regionId est null
         if ("null".equalsIgnoreCase(regionId)) {
-            return findNotAssignedReport();
+            return findNotAssignedReport(page);
         }
 
         // Si l'utilisateur connecté est de type région
@@ -152,7 +216,7 @@ public class ReportController {
         if( authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REGION")) ) {
             String regionName = (String) authentication.getPrincipal();
             Region region =  regionService.findByName(regionName);
-            return reportService.findByRegion(region);
+            return reportService.findByRegion(region, page);
         }
 
         // Si l'utilisateur connecté est de type citoyen
@@ -160,15 +224,26 @@ public class ReportController {
         if( authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_CITIZEN")) ) {
             String citizenEmail = (String) authentication.getPrincipal();
             Citizen citizen =  citizenService.findByEmail(citizenEmail);
-            return reportService.findByCitizen(citizen);
+            return reportService.findByCitizen(citizen, page);
         }
 
         return null;
     }
 
+    /**
+     * Créer un signalement des problèmes
+     * @param authentication Authentication fournis par le token
+     */
     @PostMapping
     @PreAuthorize("hasAuthority('report:create')")
-    public ResponseEntity<Object> create(Authentication authentication, @RequestBody Report report) {
+    @Transactional
+    public ResponseEntity<Object> create(Authentication authentication,
+                                         @RequestParam String title,
+                                         @RequestParam String description,
+                                         @RequestParam Double latitude,
+                                         @RequestParam Double longitude,
+                                         @RequestParam MultipartFile image)
+    {
         // Récuperation du citoyen
         String email = (String) authentication.getPrincipal();
         Citizen citizen = citizenService.findByEmail(email);
@@ -183,12 +258,30 @@ public class ReportController {
             );
 
         // Affectation des données nécessaire au signalement
+        Report report = new Report();
+        report.setTitle(title);
+        report.setDescription(description);
+        report.setLatitude(latitude);
+        report.setLongitude(longitude);
         report.setDate(LocalDate.now());
         report.setCitizen(citizen);
         report.setStatus(Status.NEW.getStatus());
 
         // Insertion à la base de données
         reportService.insert(report);
+
+        // Upload de l'image du signalement
+        File img = new File(FILE_DIRECTORY + "\\" +report.getId() + ".png");
+        try {
+            img.createNewFile();
+            FileOutputStream fos = new FileOutputStream(img);
+            fos.write(image.getBytes());
+            fos.close();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+
         return new ResponseEntity<>(
                 new HttpResponse(
                         HttpStatus.OK.value(), false, "Signalement crée avec succès"

@@ -7,12 +7,36 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Interface du service d'accèss aux base de donnée de la classe Report
  * @author Mandresy
  */
 public interface ReportService {
+
+    /**
+     * Rechercher des signalements en utilisant des mot-clés est un catégorie
+     * @param keyword Mot-clés
+     * @param category Categorie du signalement
+     * @return Liste des signalements correspondant aux critères du recherche
+     */
+    Set<Report> searchReportWithCategory(Integer region_id, String keyword, String category);
+
+    /**
+     * Avoir la liste des mot-clés des signalements de problèmes
+     * @return la liste des mot-clés des signalements de problèmes
+     */
+    List<String> getKeywords();
+
+    /**
+     * Rechercher des signalements en utilisant un mot-clés
+     * @param region region qui fait la recherche
+     * @param keyword Mots-clés
+     * @return Liste des signalements qui a le mots-clés
+     */
+    List<Report> searchReport(Region region, String keyword);
+
     /**
      * Avoir le top 5 des mots-clés les plus fréquents dans les signalements des problèmes
      * @return le top 5 des mots-clés les plus fréquents dans les signalements des problèmes
@@ -30,7 +54,7 @@ public interface ReportService {
      * @param citizen Le citoyen filtre
      * @return La liste des signalements faits par le citoyen
      */
-    List<Report> findByCitizen(Citizen citizen);
+    List<Report> findByCitizen(Citizen citizen, Integer page);
 
     /**
      * Inserer un signalement de problème aux base de données
@@ -59,13 +83,13 @@ public interface ReportService {
      * @param region La région filtre
      * @return Liste des signalèment fait dans une région
      */
-    List<Report> findByRegion(Region region);
+    List<Report> findByRegion(Region region, Integer page);
 
     /**
      * Avoir la liste des signalèment pas encore affecté à une région
      * @return Liste des signalèment pas encore affecté à une région
      */
-    List<Report> findByRegionIsNull();
+    List<Report> findByRegionIsNull(Integer page);
 
     /**
      * Avoir le top 6 des régions qui ont le plus des signalement

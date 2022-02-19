@@ -2,8 +2,10 @@ package mg.gov.goodGovernment.report;
 
 import mg.gov.goodGovernment.citizen.Citizen;
 import mg.gov.goodGovernment.region.Region;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -11,11 +13,39 @@ import java.util.List;
  * JpaRepository du table report
  */
 public interface ReportRepository extends JpaRepository<Report, Long> {
-    List<Report> findByRegion(Region region);
 
-    List<Report> findByRegionIsNull();
+    /**
+     * Avoir la liste des mots-clés dans les signalements des problèmes
+     * @return la liste des mots-clés dans les signalements des problèmes
+     */
+    @Query(
+            value = "SELECT keyword, count(lower(keyword)) as repetition\n" +
+                    "FROM (\n" +
+                    "         SELECT regexp_split_to_table(title, '\\s') as keyword\n" +
+                    "         FROM report\n" +
+                    "     ) AS k \n" +
+                    "WHERE keyword != 'ny'\n" +
+                    "GROUP BY keyword ORDER BY repetition DESC LIMIT 6",
+            nativeQuery = true
+    )
+    List<Object[]> listKeywords();
 
-    List<Report> findByCitizen(Citizen citizen);
+    /**
+     * Chercher les signalements qui contient les mots clés entrées
+     * @param region_id ID du région qui fait la recherche
+     * @param keyword Mots-clés
+     * @return Liste des signalements qui contient les mots clés entrées
+     */
+    @Query("SELECT r FROM Report r WHERE r.region.id = :region_id AND " +
+            "(lower(r.title) LIKE lower( concat('%', :keyword, '%') ) " +
+            "OR lower(r.description) LIKE lower( concat('%', :keyword, '%') ) )")
+    List<Report> search(@Param("region_id") Integer region_id, @Param("keyword") String keyword);
+
+    List<Report> findByRegion(Region region, Pageable pageable);
+
+    List<Report> findByRegionIsNull(Pageable pageable);
+
+    List<Report> findByCitizen(Citizen citizen, Pageable pageable);
 
     @Query("SELECT new mg.gov.goodGovernment.report.MonthlyReportNumber( " +
                 "EXTRACT(MONTH FROM DATE_TRUNC('month',r.date) ) AS  month, COUNT(r.id) AS reportNumber" +
@@ -47,7 +77,7 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
                     "FROM (\n" +
                     "         SELECT regexp_split_to_table(title, '\\s') as keyword\n" +
                     "         FROM report\n" +
-                    "     ) t\n" +
+                    "     ) AS k \n" +
                     "WHERE keyword != 'ny'\n" +
                     "GROUP BY keyword ORDER BY repetition DESC LIMIT 5",
             nativeQuery = true

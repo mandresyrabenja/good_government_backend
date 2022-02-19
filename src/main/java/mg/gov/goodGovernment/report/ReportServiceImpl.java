@@ -1,12 +1,14 @@
 package mg.gov.goodGovernment.report;
 
 import lombok.RequiredArgsConstructor;
+import lombok.var;
 import mg.gov.goodGovernment.citizen.Citizen;
 import mg.gov.goodGovernment.notification.CitizenNotification;
 import mg.gov.goodGovernment.notification.CitizenNotificationService;
 import mg.gov.goodGovernment.notification.Notification;
 import mg.gov.goodGovernment.region.Region;
 import mg.gov.goodGovernment.region.RegionService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+import java.util.Vector;
+import java.util.stream.Collectors;
 
 /**
  * Une implémentation de l'interface du couche service de la classe Report
@@ -27,6 +32,32 @@ public class ReportServiceImpl implements ReportService{
     private final CitizenNotificationService citizenNotificationService;
 
     @Override
+    public Set<Report> searchReportWithCategory(Integer region_id, String keyword, String category) {
+        Set<Report> results = this.reportRepository.search(region_id, keyword).stream().distinct()
+            .filter(
+                this.reportRepository.search(region_id, category)::contains
+            ).collect(Collectors.toSet());
+        return results;
+    }
+
+    @Override
+    public List<String> getKeywords() {
+        List<Object[]> keywordsWithNumber = this.reportRepository.top5MostRepetitiveKeyword();
+        var keywords = new Vector<String>();
+
+        for (Object[] keywordWithNumber: keywordsWithNumber) {
+            keywords.add((String) keywordWithNumber[0]);
+        }
+
+        return keywords;
+    }
+
+    @Override
+    public List<Report> searchReport(Region region, String keyword) {
+        return this.reportRepository.search(region.getId(), keyword);
+    }
+
+    @Override
     public List<Object[]> top5MostRepetitiveKeyword() {
         return reportRepository.top5MostRepetitiveKeyword();
     }
@@ -37,8 +68,8 @@ public class ReportServiceImpl implements ReportService{
     }
 
     @Override
-    public List<Report> findByCitizen(Citizen citizen) {
-        return reportRepository.findByCitizen(citizen);
+    public List<Report> findByCitizen(Citizen citizen, Integer page) {
+        return reportRepository.findByCitizen(citizen, PageRequest.of(page, 10));
     }
 
     @Override
@@ -92,13 +123,13 @@ public class ReportServiceImpl implements ReportService{
     }
 
     @Override
-    public List<Report> findByRegion(Region region) {
-        return reportRepository.findByRegion(region);
+    public List<Report> findByRegion(Region region, Integer page) {
+        return reportRepository.findByRegion(region, PageRequest.of(page, 10));
     }
 
     @Override
-    public List<Report> findByRegionIsNull() {
-        return reportRepository.findByRegionIsNull();
+    public List<Report> findByRegionIsNull(Integer page) {
+        return reportRepository.findByRegionIsNull(PageRequest.of(page, 10));
     }
 
     @Override
