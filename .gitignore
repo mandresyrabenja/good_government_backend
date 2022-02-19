@@ -1,4 +1,4 @@
-# Ingoer la configuration du base de données localhost
+# Ingorer la configuration du base de données localhost
 src/main/resources/application.properties
 target/classes/application.properties
 
