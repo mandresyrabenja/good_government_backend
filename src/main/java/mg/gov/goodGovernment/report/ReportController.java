@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.var;
 import mg.gov.goodGovernment.citizen.Citizen;
 import mg.gov.goodGovernment.citizen.CitizenService;
+import mg.gov.goodGovernment.file.SaveFileResult;
 import mg.gov.goodGovernment.http.HttpResponse;
 import mg.gov.goodGovernment.region.Region;
 import mg.gov.goodGovernment.region.RegionService;
@@ -25,10 +26,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/reports")
@@ -39,8 +42,35 @@ public class ReportController {
     private final ReportService reportService;
     private final CitizenService citizenService;
     private final RegionService regionService;
-    @Value("${file.upload.location}")
+    @Value("${upload.location}")
     private String FILE_DIRECTORY;
+
+    /**
+     * Créer un fichier dans le cloud
+     * @param file Fichier créer
+     * @param fileName Nom du fichier
+     * @return Resultat si le fichier est créer ou pas
+     */
+    private SaveFileResult saveFile(MultipartFile file, String fileName) {
+
+        var uploadPath = Paths.get(FILE_DIRECTORY);
+        if (!Files.exists(uploadPath)) {
+            try {
+                Files.createDirectory(uploadPath);
+            } catch (IOException e) {
+                throw new RuntimeException("Echec de création du dossier contenant le fichier");
+            }
+        }
+
+        var dest = Paths.get(FILE_DIRECTORY + "/" +fileName);
+        try {
+            Files.copy(file.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new SaveFileResult().setFilename(fileName).setError(true);
+        }
+        return new SaveFileResult().setFilename(fileName);
+    }
 
     /**
      * Avoir la liste des mots-clés des signalements des problèmes.<br>
@@ -77,12 +107,17 @@ public class ReportController {
         else throw new IllegalStateException("Aucun région connecté");
     }
 
+    /**
+     * Avoir le photo d'un signalement de problème
+     * @param id ID du signalement de problème
+     * @return Fichier contenant le photo du signalement de problème
+     */
     @GetMapping(path = "/{id}/photo", produces = MediaType.IMAGE_PNG_VALUE)
-    @PreAuthorize("hasRole('GOVERNMENT')")
+    @PreAuthorize("hasAuthority('report:read')")
     public byte[] getPhoto(@PathVariable Long id) {
         try {
             return Files.readAllBytes(
-                    Paths.get(System.getProperty("user.home") + "/gg/report/" + id.toString() + ".png")
+                    Paths.get(FILE_DIRECTORY + "/" + id.toString() + ".png")
             );
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -271,16 +306,7 @@ public class ReportController {
         reportService.insert(report);
 
         // Upload de l'image du signalement
-        File img = new File(FILE_DIRECTORY + "\\" +report.getId() + ".png");
-        try {
-            img.createNewFile();
-            FileOutputStream fos = new FileOutputStream(img);
-            fos.write(image.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-        }
+        this.saveFile(image, report.getId() + ".png");
 
         return new ResponseEntity<>(
                 new HttpResponse(
