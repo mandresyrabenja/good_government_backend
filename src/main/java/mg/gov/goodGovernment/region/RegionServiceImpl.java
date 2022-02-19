@@ -50,6 +50,11 @@ public class RegionServiceImpl implements RegionService, UserDetailsService {
         regionRepository.save(region);
     }
 
+    @Override
+    public Long count() {
+        return this.regionRepository.count();
+    }
+
     public List<Region> findAllRegions(Integer page) {
         return regionRepository.findByOrderByName(PageRequest.of(page, 10));
     }
@@ -80,6 +85,12 @@ public class RegionServiceImpl implements RegionService, UserDetailsService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public Long getPageNumber(Integer regionsPerPage) {
+        Long regionsNumber = count();
+        return ( ( regionsNumber-(regionsNumber%regionsPerPage) ) / regionsPerPage) + 1;
     }
 
     @Override

@@ -58,6 +58,12 @@ public class RegionController {
         }
     }
 
+    @GetMapping(path = "page_nb")
+    @PreAuthorize("hasAuthority('region:read')")
+    public Long getRegionsPageNumber()  {
+        return this.regionService.getPageNumber(10);
+    }
+
     @GetMapping(path = "{regionId}")
     @PreAuthorize("hasAuthority('region:read')")
     public ResponseEntity<Object> findRegion(@PathVariable("regionId") Integer id) {
