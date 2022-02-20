@@ -238,7 +238,7 @@ public class ReportController {
     @PreAuthorize("hasAuthority('report:read')")
     public List<Report> findReport(Authentication authentication,
                                    @RequestParam(value = "region", required = false) String regionId,
-                                   @RequestParam Integer page)
+                                   @RequestParam(required = false) Integer page)
     {
         // Récuperer la liste des signalements pas encore affecté
         // si regionId est null
@@ -251,7 +251,7 @@ public class ReportController {
         if( authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REGION")) ) {
             String regionName = (String) authentication.getPrincipal();
             Region region =  regionService.findByName(regionName);
-            return reportService.findByRegion(region, page);
+            return (page == null) ? reportService.findByRegion(region) : reportService.findByRegion(region, page);
         }
 
         // Si l'utilisateur connecté est de type citoyen

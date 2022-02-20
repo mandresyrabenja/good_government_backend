@@ -81,6 +81,7 @@ public interface ReportService {
     /**
      * Avoir la liste des signalèment fait dans une région
      * @param region La région filtre
+     * @param page Numero de page
      * @return Liste des signalèment fait dans une région
      */
     List<Report> findByRegion(Region region, Integer page);
@@ -95,4 +96,11 @@ public interface ReportService {
      * Avoir le top 6 des régions qui ont le plus des signalement
      */
     List<Object[]> top6RegionWithMostReport();
+
+    /**
+     * Avoir la liste des signalèment fait dans une région
+     * @param region La région filtre
+     * @return Liste des signalèment fait dans une région
+     */
+    List<Report> findByRegion(Region region);
 }
