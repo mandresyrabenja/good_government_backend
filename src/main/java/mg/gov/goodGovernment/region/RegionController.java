@@ -54,7 +54,7 @@ public class RegionController {
             return regions;
         } catch (IllegalStateException e) {
             // Si l'utilisateur est connecté en tant que gouvernment alors on donne la liste des régions
-            return regionService.findAllRegions(page);
+            return (page == null) ? regionService.findAllRegions() : regionService.findAllRegions(page);
         }
     }
 

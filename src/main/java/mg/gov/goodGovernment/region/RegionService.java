@@ -28,4 +28,6 @@ public interface RegionService {
      * @return La région correspondant aux critères
      */
     Region findByName(String name);
+
+    List<Region> findAllRegions();
 }

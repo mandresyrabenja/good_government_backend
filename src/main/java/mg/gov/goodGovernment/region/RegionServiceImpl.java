@@ -99,4 +99,9 @@ public class RegionServiceImpl implements RegionService, UserDetailsService {
                 () -> new UsernameNotFoundException(String.format("No region has %s as name", name))
         );
     }
+
+    @Override
+    public List<Region> findAllRegions() {
+        return regionRepository.findAll();
+    }
 }
