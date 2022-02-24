@@ -207,7 +207,7 @@ public class ReportController {
     public ResponseEntity<Object> findReport(@PathVariable Long id) {
         try {
             Report report = reportService.findById(id);
-            return new ResponseEntity<>(report, HttpStatus.FOUND);
+            return new ResponseEntity<>(report, HttpStatus.OK);
         } catch (IllegalStateException e) {
             // Si aucun signalement ne correspond à l'ID envoyé par le requête Http
           return new ResponseEntity<>(
