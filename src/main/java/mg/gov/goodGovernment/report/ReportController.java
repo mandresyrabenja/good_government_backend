@@ -212,9 +212,9 @@ public class ReportController {
             // Si aucun signalement ne correspond à l'ID envoyé par le requête Http
           return new ResponseEntity<>(
                   new HttpResponse(
-                          HttpStatus.NOT_FOUND.value(), true, e.getMessage()
+                          HttpStatus.OK.value(), true, e.getMessage()
                   ),
-                  HttpStatus.NOT_FOUND
+                  HttpStatus.OK
           );
         }
     }
