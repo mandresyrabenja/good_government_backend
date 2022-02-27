@@ -141,4 +141,9 @@ public class ReportServiceImpl implements ReportService{
     public List<Report> findByRegion(Region region) {
         return this.reportRepository.findByRegion(region);
     }
+
+    @Override
+    public Long countRegionReports(Region region) {
+        return this.reportRepository.countByRegion(region);
+    }
 }

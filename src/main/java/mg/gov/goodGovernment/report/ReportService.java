@@ -103,4 +103,11 @@ public interface ReportService {
      * @return Liste des signalèment fait dans une région
      */
     List<Report> findByRegion(Region region);
+
+    /**
+     * Compter les signalements d'un région
+     * @param region Region
+     * @return Nombre des signalements du région
+     */
+    Long countRegionReports(Region region);
 }
