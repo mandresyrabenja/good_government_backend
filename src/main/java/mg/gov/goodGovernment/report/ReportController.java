@@ -126,6 +126,23 @@ public class ReportController {
     }
 
     /**
+     * Avoir le nombre des pages d'un région s'une page contient 10 signalements
+     * @param authentication Authentification du région
+     * @return Le nombre des pages de ses signalements
+     */
+    @GetMapping(path = "page_nb")
+    @PreAuthorize("hasAuthority('report:read')")
+    public Long getPageNumber(Authentication authentication) {
+        if( authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REGION")) ) {
+            String regionName = (String) authentication.getPrincipal();
+            Region region =  regionService.findByName(regionName);
+            Long reportsNb = this.reportService.countRegionReports(region);
+            return ( ( reportsNb-(reportsNb%10) ) / 10) + 1;
+        }
+        return 0l;
+    }
+    
+    /**
      * Avoir le top 5 des mots-clés les plus fréquents dans les signalements des problèmes
      * @return Hashmap avec le mot-clés comme clé et son nombre de répétition comme valeur
      */

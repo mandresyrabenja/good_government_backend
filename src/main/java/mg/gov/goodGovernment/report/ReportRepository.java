@@ -85,4 +85,6 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     List<Object[]> top5MostRepetitiveKeyword();
 
     List<Report> findByRegion(Region region);
+
+    Long countByRegion(Region region);
 }
