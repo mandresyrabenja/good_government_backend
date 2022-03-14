@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>mg.gov</groupId>
 	<artifactId>goodGovernment</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.4</version>
 	<name>goodGovernment</name>
 	<description>Projet de signalisation des problèmes des citoyens pour le gouvernement</description>
 	<properties>
