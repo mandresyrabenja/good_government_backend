@@ -11,6 +11,11 @@ import org.springframework.context.annotation.Bean;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Les configurations d'authentification JWT
+ *
+ * @author Mandresy
+ */
 @ConfigurationProperties(prefix = "application.jwt")
 @Data
 @AllArgsConstructor

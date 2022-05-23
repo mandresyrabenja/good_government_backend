@@ -24,6 +24,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Vérification du validité d'un token JWT
+ *
+ * @author Mandresy
+ */
 @RequiredArgsConstructor
 public class JwtTokenVerifier extends OncePerRequestFilter {
     private final SecretKey secretKey;
@@ -65,6 +70,5 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-        return;
     }
 }

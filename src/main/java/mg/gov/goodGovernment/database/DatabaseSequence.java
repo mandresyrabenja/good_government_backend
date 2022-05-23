@@ -7,7 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * Séquence du base de données MongoDB
+ * Collection MongoDB contenant les séquences des autres collections sous forme d'un document par collection
+ *
  * @author Mandresy
  */
 @Document(collection = "database_sequences")

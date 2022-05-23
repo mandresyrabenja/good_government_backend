@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Controlleur HTTP de l'entité Citizen
+ *
+ * @author Mandresy
  */
 @RestController
 @RequestMapping("api/v1/citizens")

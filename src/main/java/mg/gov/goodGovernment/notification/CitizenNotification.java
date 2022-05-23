@@ -14,6 +14,8 @@ import java.util.Vector;
 
 /**
  * Modèle du collection mongodb contenant les notifications de chaques citoyens
+ *
+ * @author Mandresy
  */
 @Data
 @NoArgsConstructor

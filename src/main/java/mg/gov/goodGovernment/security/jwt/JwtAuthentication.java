@@ -19,6 +19,11 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Date;
 
+/**
+ * Filtre d'authentification JWT d'un utilisateur
+ *
+ * @author Mandresy
+ */
 @RequiredArgsConstructor
 public class JwtAuthentication extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;

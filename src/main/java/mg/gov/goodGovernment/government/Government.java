@@ -1,12 +1,19 @@
 package mg.gov.goodGovernment.government;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import mg.gov.goodGovernment.security.Sha256;
 
 import javax.persistence.*;
 
+/**
+ * Entité du table government
+ *
+ * @author Mandresy
+ */
 @Data
 @NoArgsConstructor
 @Entity

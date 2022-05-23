@@ -22,6 +22,8 @@ import javax.crypto.SecretKey;
 
 /**
  * Configuration du securité de l'application
+ *
+ * @author Mandresy
  */
 @Configuration
 @EnableWebSecurity
@@ -37,8 +39,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-            .cors().and()
+        http.cors()
+
+            .and()
+
             // Cet application est utilisé par des clients web et mobile
             .csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -56,14 +60,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-            .authenticationProvider(regionAuthProvider())
+        auth.authenticationProvider(regionAuthProvider())
             .authenticationProvider(govAuthProvider())
             .authenticationProvider(citizenAuthProvider());
     }
 
     /**
-     * AuthenticationProvider d'un compte de région
+     * AuthenticationProvider d'un compte de type région
      */
     public DaoAuthenticationProvider regionAuthProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();

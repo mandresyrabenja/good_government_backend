@@ -9,6 +9,8 @@ import java.util.Set;
 
 /**
  * UserDetails personnalisé pour cet application
+ *
+ * @author Mandresy
  */
 @AllArgsConstructor
 public class ApplicationUser implements UserDetails {

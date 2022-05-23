@@ -33,6 +33,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Controlleur HTTP de l'entité Report
+ *
+ * @author Mandresy
+ */
 @RestController
 @RequestMapping("api/v1/reports")
 @RequiredArgsConstructor

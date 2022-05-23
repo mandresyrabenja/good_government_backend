@@ -6,7 +6,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * Conteneur du reponse HTTP
+ * Classe du reponse HTTP
+ *
+ * @author Mandresy
  */
 @Data
 @AllArgsConstructor

@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Liste des permissions
+ * Les permissions des utilisateurs
+ *
+ * @author Mandresy
  */
 @RequiredArgsConstructor
 @Getter

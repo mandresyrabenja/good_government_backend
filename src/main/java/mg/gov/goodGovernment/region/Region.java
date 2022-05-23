@@ -9,6 +9,11 @@ import mg.gov.goodGovernment.security.Sha256;
 import javax.persistence.*;
 import java.util.Collection;
 
+/**
+ * Entité du table region. Le table région contient les comptes de type région.
+ *
+ * @author Mandresy
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -10,36 +10,22 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 /**
- * JpaRepository du table report
+ * JpaRepository de l'entité Report
+ *
+ * @author Mandresy
  */
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
     /**
-     * Avoir la liste des mots-clés dans les signalements des problèmes
-     * @return la liste des mots-clés dans les signalements des problèmes
-     */
-    @Query(
-            value = "SELECT keyword, count(lower(keyword)) as repetition\n" +
-                    "FROM (\n" +
-                    "         SELECT regexp_split_to_table(title, '\\s') as keyword\n" +
-                    "         FROM report\n" +
-                    "     ) AS k \n" +
-                    "WHERE keyword != 'ny'\n" +
-                    "GROUP BY keyword ORDER BY repetition DESC LIMIT 6",
-            nativeQuery = true
-    )
-    List<Object[]> listKeywords();
-
-    /**
-     * Chercher les signalements qui contient les mots clés entrées
+     * Chercher toutes les signalements d'un région qui contiennent les mots clés entrées
      * @param region_id ID du région qui fait la recherche
-     * @param keyword Mots-clés
-     * @return Liste des signalements qui contient les mots clés entrées
+     * @param keyword Mots-clés qu'on veut rechercher
+     * @return Les signalements du région qui contiennent les mots clés entrées
      */
     @Query("SELECT r FROM Report r WHERE r.region.id = :region_id AND " +
             "(lower(r.title) LIKE lower( concat('%', :keyword, '%') ) " +
             "OR lower(r.description) LIKE lower( concat('%', :keyword, '%') ) )")
-    List<Report> search(@Param("region_id") Integer region_id, @Param("keyword") String keyword);
+    List<Report> searchRegionReport(@Param("region_id") Integer region_id, @Param("keyword") String keyword);
 
     List<Report> findByRegion(Region region, Pageable pageable);
 
@@ -54,7 +40,6 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
             "FROM Report r WHERE EXTRACT(YEAR FROM r.date) = ?1 " +
             "GROUP BY DATE_TRUNC('month',r.date)"
     )
-
     List<MonthlyReportNumber> getLastYearMonthlyReportNumber(Integer lastYear);
 
     /**

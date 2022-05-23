@@ -6,6 +6,11 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
+/**
+ * Repository du collection CitizenNotification
+ *
+ * @author Mandresy
+ */
 public interface CitizenNotificationRepository extends MongoRepository<CitizenNotification, Long> {
     @Query("{'citizen.email': ?0}")
     Optional<CitizenNotification> findByCitizenEmail(@Param("email") String email);

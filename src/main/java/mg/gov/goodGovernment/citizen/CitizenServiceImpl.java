@@ -1,8 +1,9 @@
 package mg.gov.goodGovernment.citizen;
 
 import lombok.AllArgsConstructor;
-import mg.gov.goodGovernment.security.AppUserRole;
 import mg.gov.goodGovernment.authentication.ApplicationUser;
+import mg.gov.goodGovernment.citizen.dataValidation.CitizenValidationResult;
+import mg.gov.goodGovernment.security.AppUserRole;
 import mg.gov.goodGovernment.security.Sha256;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,32 +15,33 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
-import java.util.regex.Pattern;
 
+import static mg.gov.goodGovernment.citizen.dataValidation.CitizenRegistrationValidator.*;
+import static mg.gov.goodGovernment.citizen.dataValidation.CitizenValidationResult.SUCCESS;
+
+/**
+ * Une implémentation des interfaces des services liées à l'entité Citizen
+ */
 @Service
 @AllArgsConstructor
 public class CitizenServiceImpl implements CitizenService, UserDetailsService {
     private final CitizenRepository citizenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final Pattern emailPattern = Pattern.compile("[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
-    private final Pattern accentedPattern = Pattern.compile("(.)*[À-ú](.)*");
 
     /**
-     * Vérification s'une  chaîne des caractères corespond à un regex donnée
-     * @param string La chaîne des caractères
-     * @param pattern Le regex
-     * @return <code>true</code> si la chaîne des caractères suive les règles imposer par le regex.<br>
-     *         <code>false</code> si la condition n'est pas satisfait
+     * Savoir si un citoyen est majeur.
+     * @param citizen un citoyen
+     * @return <code>true</code> si le citoyen est majeur vrai<br>
      */
-    static boolean patternMatches(String string, Pattern pattern) {
-        return pattern.matcher(string).matches();
+    public Boolean isAdultCitizen(Citizen citizen) {
+        return citizen.getAge() >= 18;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) {
         // Avoir le citoyen du base de données correspondant à l'email entré
         Citizen citizen = citizenRepository.findByEmail(email).orElseThrow(
-                () -> new UsernameNotFoundException("Aucun citoyen n'a cet email" + email)
+                () -> new UsernameNotFoundException("Aucun citoyen n'a " + email + " comme email")
         );
 
         // Créer un UserDetail à partir du citoyen obtenu
@@ -57,35 +59,24 @@ public class CitizenServiceImpl implements CitizenService, UserDetailsService {
     @Override
     public void createCitizen(Citizen citizen) {
 
-        // Vérification si le mot de passe a 8 caractère ou plus
-        if( (citizen.getPassword().length() < 8) )
-            throw new IllegalStateException("Le mot de passe doit avoir au minimum 8 caractère");
-
-        // Vérification si le mot de passe n'a pas de lettre accentué
-        if(CitizenServiceImpl.patternMatches(citizen.getPassword(), accentedPattern))
-            throw new IllegalStateException("Le mot de passe ne doit avoir aucun accènt");
-
-        // Cryptage du mdp en sha256
-        citizen.setPassword( Sha256.hash(citizen.getPassword()) );
-
-        // Vérification si l'email est valide
-        if(!patternMatches(citizen.getEmail(), this.emailPattern))
-            throw new IllegalStateException("L'email entré n'est pas valide");
+        // Validation des données d'insrcription du citoyen
+        CitizenValidationResult registrationDataValidationResult = isPasswordContainsNoAccentedCharacter()
+                .and(isPasswordContainsEightOrMoreWords())
+                .and(isValidEmail())
+                .and(isCitizenAdultAndHaveId())
+                .and(isCitizenChildAndHaveNoId())
+                .apply(citizen);
+        if(!SUCCESS.equals(registrationDataValidationResult)) {
+            throw new IllegalStateException( registrationDataValidationResult.getResult() );
+        }
 
         // Un email est unique
         if(citizenRepository.existsByEmail(citizen.getEmail())) {
             throw new IllegalStateException("Un autre citoyen a déjà la même email");
         }
 
-        // Vérification de l'attribut CIN si le citoyen a 18ans ou plus
-        if(citizen.isAdultCitizen() && (null == citizen.getCin()) ) {
-            throw new IllegalStateException("Un citoyen qui a 18ans ou plus doit avoir un CIN");
-        }
-
-        // Un citoyen doit être majeur pour avoir un CIN
-        if(!citizen.isAdultCitizen() && (null != citizen.getCin()) ) {
-            throw new IllegalStateException("Un citoyen doit être majeur pour avoir un CIN");
-        }
+        // Cryptage du mdp en sha256
+        citizen.setPassword( Sha256.hash(citizen.getPassword()) );
 
         citizenRepository.save(citizen);
     }
@@ -99,10 +90,13 @@ public class CitizenServiceImpl implements CitizenService, UserDetailsService {
         // Insertion des updates
         if(null != newCitizenData.getCin()) {
             // Un citoyen doit être majeur pour avoir un CIN
-            if(!dbCitizen.isAdultCitizen()) throw new IllegalStateException("Un citoyen doit être majeur pour avoir un CIN");
+            CitizenValidationResult dataValidatorResult = isCitizenAdultAndHaveId().apply(newCitizenData);
+            if( !SUCCESS.equals(dataValidatorResult) )
+                throw new IllegalStateException(dataValidatorResult.getResult());
 
             dbCitizen.setCin(newCitizenData.getCin());
         }
+
         if(null != newCitizenData.getDob()) {
             int age = Period.between(newCitizenData.getDob(), LocalDate.now()).getYears();
 
@@ -119,6 +113,10 @@ public class CitizenServiceImpl implements CitizenService, UserDetailsService {
             dbCitizen.setDob(newCitizenData.getDob());
         }
         if(null != newCitizenData.getEmail()) {
+            CitizenValidationResult dataValidatorResult = isValidEmail().apply(newCitizenData);
+            if( !SUCCESS.equals(dataValidatorResult) )
+                throw new IllegalStateException(dataValidatorResult.getResult());
+
             dbCitizen.setEmail(newCitizenData.getEmail());
         }
         if(null != newCitizenData.getFirstName()) {
