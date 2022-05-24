@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 import mg.gov.goodGovernment.report.Report;
 
 /**
- * Notification d'un problème terminé
+ * Modèle du notification que le citoyen reçois lorsqu'un de ses signalements de problème est terminé
+ *
  * @author Mandresy
  */
 @Data

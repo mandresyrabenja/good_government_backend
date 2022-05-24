@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Une implémentation de l'interface d'accès aux base de données
+ *
  * @author Mandresy
  */
 @Service

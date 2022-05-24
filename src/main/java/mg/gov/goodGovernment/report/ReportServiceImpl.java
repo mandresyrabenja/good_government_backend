@@ -21,7 +21,8 @@ import java.util.Vector;
 import java.util.stream.Collectors;
 
 /**
- * Une implémentation de l'interface du couche service de la classe Report
+ * Une implémentation de l'interface du couche d'accès au base des données de la classe Report
+ *
  * @author Mandresy
  */
 @Service
@@ -33,9 +34,9 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public Set<Report> searchReportWithCategory(Integer region_id, String keyword, String category) {
-        Set<Report> results = this.reportRepository.search(region_id, keyword).stream().distinct()
+        Set<Report> results = this.reportRepository.searchRegionReport(region_id, keyword).stream().distinct()
             .filter(
-                this.reportRepository.search(region_id, category)::contains
+                this.reportRepository.searchRegionReport(region_id, category)::contains
             ).collect(Collectors.toSet());
         return results;
     }
@@ -54,7 +55,7 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public List<Report> searchReport(Region region, String keyword) {
-        return this.reportRepository.search(region.getId(), keyword);
+        return this.reportRepository.searchRegionReport(region.getId(), keyword);
     }
 
     @Override

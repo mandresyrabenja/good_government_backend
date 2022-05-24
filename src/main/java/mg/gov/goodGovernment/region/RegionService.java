@@ -3,7 +3,8 @@ package mg.gov.goodGovernment.region;
 import java.util.List;
 
 /**
- * Service d'accès au base de données de l'entité Région
+ * Interface du service d'accès au base de données de l'entité Région
+ *
  * @author Mandresy
  */
 public interface RegionService {

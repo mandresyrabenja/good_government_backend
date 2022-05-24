@@ -10,6 +10,11 @@ import mg.gov.goodGovernment.region.Region;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+/**
+ * Entité du table Report
+ *
+ * @author Mandresy
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -11,7 +11,9 @@ import java.util.stream.Collectors;
 import static mg.gov.goodGovernment.security.AppUserPermission.*;
 
 /**
- * Liste des roles pour spring security
+ * Les roles des utilisateurs pour spring security
+ *
+ * @author Mandresy
  */
 @RequiredArgsConstructor
 @Getter
@@ -48,7 +50,7 @@ public enum AppUserRole {
      */
     public Set<SimpleGrantedAuthority> getGrantedAutorities() {
 
-        // Stockage des authorities dans un Set
+        // Affectation des authorities dans un Set
         Set<SimpleGrantedAuthority> authorities = getPermissions()
                 .stream()
                 .map(

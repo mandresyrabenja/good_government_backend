@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 /**
  * Nombre des signalements par mois
+ *
+ * @author Mandresy
  */
 @Data
 @AllArgsConstructor

@@ -1,9 +1,9 @@
 package mg.gov.goodGovernment.security;
 
 import lombok.AllArgsConstructor;
-import mg.gov.goodGovernment.citizen.CitizenServiceImpl;
-import mg.gov.goodGovernment.government.GovernmentServiceImpl;
-import mg.gov.goodGovernment.region.RegionServiceImpl;
+import mg.gov.goodGovernment.citizen.CitizenUserDetailsService;
+import mg.gov.goodGovernment.government.GovernmentUserDetailsService;
+import mg.gov.goodGovernment.region.RegionUserDetailsService;
 import mg.gov.goodGovernment.security.jwt.JwtAuthentication;
 import mg.gov.goodGovernment.security.jwt.JwtConfig;
 import mg.gov.goodGovernment.security.jwt.JwtTokenVerifier;
@@ -22,6 +22,8 @@ import javax.crypto.SecretKey;
 
 /**
  * Configuration du securité de l'application
+ *
+ * @author Mandresy
  */
 @Configuration
 @EnableWebSecurity
@@ -29,16 +31,18 @@ import javax.crypto.SecretKey;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder passwordEncoder;
-    private final RegionServiceImpl regionServiceImpl;
-    private final GovernmentServiceImpl governmentServiceImpl;
+    private final RegionUserDetailsService regionUserDetailsService;
+    private final GovernmentUserDetailsService governmentUserDetailsService;
     private final SecretKey secretKey;
     private final JwtConfig jwtConfig;
-    private final CitizenServiceImpl citizenServiceImpl;
+    private final CitizenUserDetailsService citizenUserDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-            .cors().and()
+        http.cors()
+
+            .and()
+
             // Cet application est utilisé par des clients web et mobile
             .csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -56,19 +60,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-            .authenticationProvider(regionAuthProvider())
+        auth.authenticationProvider(regionAuthProvider())
             .authenticationProvider(govAuthProvider())
             .authenticationProvider(citizenAuthProvider());
     }
 
     /**
-     * AuthenticationProvider d'un compte de région
+     * AuthenticationProvider d'un compte de type région
      */
     public DaoAuthenticationProvider regionAuthProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(regionServiceImpl);
+        provider.setUserDetailsService(regionUserDetailsService);
 
         return provider;
     }
@@ -79,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider govAuthProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(governmentServiceImpl);
+        provider.setUserDetailsService(governmentUserDetailsService);
 
         return provider;
     }
@@ -90,7 +93,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider citizenAuthProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(citizenServiceImpl);
+        provider.setUserDetailsService(citizenUserDetailsService);
 
         return provider;
     }

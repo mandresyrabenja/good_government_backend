@@ -3,11 +3,10 @@ package mg.gov.goodGovernment.region;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mg.gov.goodGovernment.authentication.ApplicationUser;
+import mg.gov.goodGovernment.citizen.CitizenUserDetailsService;
 import mg.gov.goodGovernment.security.AppUserRole;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,13 +16,15 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Implémentantion du service de l'entité Region
+ * Une implémentantion des services liées à l'entité Region. Cet classe implemente les services liées aux services
+ * d'accès au base de donées et au rôle de sécurité de l'entité Region.
+ *
  * @author Mandresy
  */
 @Service
 @AllArgsConstructor
 @Slf4j
-public class RegionServiceImpl implements RegionService, UserDetailsService {
+public class RegionServiceImpl implements RegionService, RegionUserDetailsService {
     private final RegionRepository regionRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -41,6 +42,7 @@ public class RegionServiceImpl implements RegionService, UserDetailsService {
         );
     }
 
+    @Override
     public void createRegion(Region region) {
         // Le nom d'une région est unique
         if(regionRepository.existsByName(region.getName())) {
@@ -55,10 +57,12 @@ public class RegionServiceImpl implements RegionService, UserDetailsService {
         return this.regionRepository.count();
     }
 
+    @Override
     public List<Region> findAllRegions(Integer page) {
         return regionRepository.findByOrderByName(PageRequest.of(page, 10));
     }
 
+    @Override
     public void deleteRegion(Integer id) {
         Region region = regionRepository.findById(id).orElseThrow(
                 () -> new IllegalStateException("Aucune region n'a cette ID")
@@ -79,12 +83,9 @@ public class RegionServiceImpl implements RegionService, UserDetailsService {
         }
     }
 
+    @Override
     public Region findByIdRegion(Integer id) {
-        if(regionRepository.existsById(id)) {
-            return regionRepository.findById(id).get();
-        } else {
-            return null;
-        }
+        return regionRepository.findById(id).orElse(null);
     }
 
     @Override

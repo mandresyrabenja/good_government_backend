@@ -13,6 +13,11 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Collection;
 
+/**
+ * Entité du table citizen
+ *
+ * @author Mandresy
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -55,15 +60,6 @@ public class Citizen {
     @OneToMany(mappedBy = "citizen")
     @JsonManagedReference("citizen_report")
     private Collection<Report> reports;
-
-    /**
-     * Savoir si cet citoyen est majeur
-     * @return <code>true</code> si vrai<br>
-     *          <code>false</code> si faux
-     */
-    public Boolean isAdultCitizen() {
-        return (getAge() >= 18) ? true : false;
-    }
 
     /**
      * Avoir l'age de cet citoyen à partir de sa date de naissance

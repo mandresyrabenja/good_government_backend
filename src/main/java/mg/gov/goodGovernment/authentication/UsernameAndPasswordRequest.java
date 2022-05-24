@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import mg.gov.goodGovernment.security.Sha256;
 
 /**
- * Class de mapping d'un authetification Json<br>
+ * Class pour deserialiser un authentification JSON.<br>
  * <u>Exemple</u>:<br>
  * {<br>
  *   "username": "jean",<br>
