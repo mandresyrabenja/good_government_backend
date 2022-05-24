@@ -3,10 +3,10 @@ package mg.gov.goodGovernment.region;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mg.gov.goodGovernment.authentication.ApplicationUser;
+import mg.gov.goodGovernment.citizen.CitizenUserDetailsService;
 import mg.gov.goodGovernment.security.AppUserRole;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ import java.util.Objects;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class RegionServiceImpl implements RegionService, UserDetailsService {
+public class RegionServiceImpl implements RegionService, RegionUserDetailsService {
     private final RegionRepository regionRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 

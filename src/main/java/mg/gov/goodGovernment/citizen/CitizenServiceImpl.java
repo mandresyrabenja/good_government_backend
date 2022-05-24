@@ -21,10 +21,12 @@ import static mg.gov.goodGovernment.citizen.dataValidation.CitizenValidationResu
 
 /**
  * Une implémentation des interfaces des services liées à l'entité Citizen
+ *
+ * @author Mandresy
  */
 @Service
 @AllArgsConstructor
-public class CitizenServiceImpl implements CitizenService, UserDetailsService {
+public class CitizenServiceImpl implements CitizenService, CitizenUserDetailsService {
     private final CitizenRepository citizenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 

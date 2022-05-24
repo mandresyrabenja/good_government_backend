@@ -1,9 +1,9 @@
 package mg.gov.goodGovernment.security;
 
 import lombok.AllArgsConstructor;
-import mg.gov.goodGovernment.citizen.CitizenServiceImpl;
-import mg.gov.goodGovernment.government.GovernmentServiceImpl;
-import mg.gov.goodGovernment.region.RegionServiceImpl;
+import mg.gov.goodGovernment.citizen.CitizenUserDetailsService;
+import mg.gov.goodGovernment.government.GovernmentUserDetailsService;
+import mg.gov.goodGovernment.region.RegionUserDetailsService;
 import mg.gov.goodGovernment.security.jwt.JwtAuthentication;
 import mg.gov.goodGovernment.security.jwt.JwtConfig;
 import mg.gov.goodGovernment.security.jwt.JwtTokenVerifier;
@@ -31,11 +31,11 @@ import javax.crypto.SecretKey;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder passwordEncoder;
-    private final RegionServiceImpl regionServiceImpl;
-    private final GovernmentServiceImpl governmentServiceImpl;
+    private final RegionUserDetailsService regionUserDetailsService;
+    private final GovernmentUserDetailsService governmentUserDetailsService;
     private final SecretKey secretKey;
     private final JwtConfig jwtConfig;
-    private final CitizenServiceImpl citizenServiceImpl;
+    private final CitizenUserDetailsService citizenUserDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -71,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider regionAuthProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(regionServiceImpl);
+        provider.setUserDetailsService(regionUserDetailsService);
 
         return provider;
     }
@@ -82,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider govAuthProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(governmentServiceImpl);
+        provider.setUserDetailsService(governmentUserDetailsService);
 
         return provider;
     }
@@ -93,7 +93,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider citizenAuthProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(citizenServiceImpl);
+        provider.setUserDetailsService(citizenUserDetailsService);
 
         return provider;
     }
